@@ -105,8 +105,88 @@ https://www.cambridge.org/core/journals/applied-psycholinguistics/article/abs/ca
 
 ---
 
-## 4. Da decidere
+## 4. Decisioni prese
 
-- Il sito personale è separato da "liceo digitale" o è una sua sezione?
-- Classi e livello (biennio A2–B1, triennio B1–B2, tutti?).
-- Ordine di realizzazione delle sei attività.
+- **Sito personale separato** da "liceo digitale", in questo repository.
+- **Per chi:** scuola superiore con indirizzi tecnici e liceo scientifico, **biennio e triennio**. Ogni attività avrà contenuti a più livelli, dall'**A2 al B2**.
+- **Si parte dall'attività 5, il 4-3-2.** Il quarto giro da 1 minuto (4-3-2-1) è stato scartato: gli studi hanno verificato solo il 4-3-2.
+
+---
+
+## 5. Attività 5: il 4-3-2 (progetto)
+
+**Dove sta:** sezione docente. Si proietta sulla LIM e il docente la guida dal suo computer.
+
+### Svolgimento in classe (circa 25 minuti)
+
+1. **Coppie.** Per esempio due file di banchi una di fronte all'altra: dopo ogni giro, una fila si sposta di un posto.
+2. **Scelta dell'argomento**, adatto al livello della classe.
+3. **Preparazione (1–2 minuti, facoltativa).** Sullo schermo: argomento, domande guida e **frasi utili** (*The thing is...*, *What I mean is...*, *Let me give you an example*). Durante il parlato le frasi spariscono.
+4. **Primo giro, 4 minuti.** A parla, B ascolta senza interrompere. Grande conto alla rovescia che cambia colore verso la fine.
+5. **"Cambio!"** Segnale sonoro (attivabile o no). Nuovo compagno, 30 secondi per sedersi.
+6. **Secondo giro, 3 minuti**, stesso argomento, compagno nuovo.
+7. **Terzo giro, 2 minuti.**
+8. **Scambio dei ruoli:** ora parla chi ascoltava.
+9. **Chiusura (2 minuti):** tre domande per riflettere a voce (per esempio "Il terzo giro è stato più facile? Quali frasi hai riusato?").
+
+### Scelte che vengono dagli studi
+
+| Scelta | Perché |
+|---|---|
+| Stesso argomento nei tre giri | Il miglioramento resta nel tempo solo così (De Jong & Perfetti 2011). |
+| Due modalità: 4-3-2 oppure 3-3-3 a tempo fisso | La fretta toglie spazio alla correttezza (Boers 2014). Il docente sceglie se allenare scioltezza o precisione. |
+| Pulsante "Riprendi l'argomento della volta scorsa" | Ripetere a distanza di giorni evita il "recitare a memoria" (Suzuki & Hanzawa 2022). L'argomento resta solo nel browser del docente. |
+| Frasi utili nella preparazione | Collega il 4-3-2 alle frasi fatte dell'attività 1 (Boers et al. 2006). |
+
+### Cosa non fa
+
+Non registra voci, non chiede nomi, non manda niente a nessuno, non usa l'intelligenza artificiale.
+
+### Gli argomenti
+
+Stanno in un **file di testo semplice**, separato dal codice, modificabile senza saper programmare.
+
+Criteri:
+- argomenti su cui si ha qualcosa da dire per 4 minuti e che resistono a tre ripetizioni: storie, dilemmi, proposte da difendere;
+- **niente argomenti troppo personali o delicati** (famiglia, salute, paure profonde). Nei dilemmi si risponde "cosa farei", mai "cosa mi è successo".
+
+**A2 (prima bozza, da rendere meno scolastica):** *My perfect weekend*, *A place I love*, *My daily routine*
+
+**B1 (prima bozza, da rendere meno scolastica):** *A problem I solved*, *A gadget I couldn't live without*, *A trip I remember*
+
+**B2 (nuova proposta, più coinvolgente):**
+
+- 🎭 **Difendi l'indifendibile**
+  - *Convince me that homework should be illegal.*
+  - *Pineapple on pizza is a masterpiece: defend it.*
+  - *Why the world would be better without smartphones for one day a week.*
+- 🚀 **Il pitch: vendi la tua idea**
+  - *Pitch an app that would solve a real problem at your school.*
+  - *You have €1 million to change your town: what do you do?*
+  - *Invent a product for the year 2050 and sell it.*
+- 🤔 **Dilemmi "What would you do?"**
+  - *You find out your best friend cheated in a test. What do you do?*
+  - *You can live forever, but alone, or 80 years with the people you love.*
+  - *You can go back 10 years and send one message to your younger self.*
+- 🤖 **AI e tecnologia**
+  - *An AI wrote your best friend's essay and got a 10. Fair or not?*
+  - *Would you let an AI choose your university, your job or your partner?*
+  - *Your phone can read your mind for 24 hours. What happens?*
+- 🎬 **Storie da raccontare**
+  - *The worst (or funniest) day of your life, told as a movie trailer.*
+  - *Tell the story of a legend or myth from your town, in your own way.*
+  - *A day in the life of your phone, from its point of view.*
+- 🔧 **Per gli indirizzi tecnici**
+  - *Explain a machine or a piece of software to someone from 1900.*
+  - *A technology that failed: what went wrong and how would you fix it?*
+
+---
+
+## 6. Da decidere (per riprendere)
+
+1. **Argomenti B2:** quali tipi piacciono di più?
+2. **Argomenti A2 e B1:** riscriverli con lo stesso stile coinvolgente del B2.
+3. **Coppie:** due file che scorrono, oppure libertà al docente (lo schermo dice solo "Cambia compagno")?
+4. **Scambio dei ruoli** nella stessa lezione, oppure un ruolo per lezione?
+5. **Chi scrive gli argomenti:** bozza di Claude corretta dalla docente, oppure li scrive la docente?
+6. **Regole del sito:** adottare le stesse di "liceo digitale" (solo HTML, CSS e JavaScript, nessuna libreria esterna, commenti e salvataggi in italiano, nessuna pubblicazione senza permesso)?
