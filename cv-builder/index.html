@@ -120,6 +120,10 @@ button, input, textarea, select { font: inherit; color: inherit; }
 /* chip skill */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font-size: 12.5px; border-radius: 99px; padding: 2px 10px; border: 1px solid; }
+button.chip { cursor: pointer; font-size: 12.5px; }
+button.chip:hover { text-decoration: underline; }
+.howto { display: flex; flex-direction: column; gap: 8px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.entry.flash { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 .chip.ok { color: var(--ok); background: var(--ok-bg); border-color: transparent; }
 .chip.warn { color: var(--warn); background: var(--warn-bg); border-color: transparent; }
 
@@ -401,12 +405,14 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
 
   function experienceEntries() {
     const out = [];
-    cv.sections.forEach(s => { if (s.kind === "entries") (s.items || []).forEach(it => out.push({ sec: s, it })); });
+    cv.sections.forEach(s => { if (s.kind === "entries") (s.items || []).forEach((it, i) => out.push({ sec: s, it, n: i + 1 })); });
     return out;
   }
   function skillLinks() {
-    const exps = experienceEntries().map(({ it }) => ({
-      label: it.title || it.org || "esperienza senza titolo",
+    // conta solo le esperienze descritte davvero: serve almeno un titolo o un punto
+    const exps = experienceEntries().filter(({ it }) => it.title.trim() || it.bullets.trim()).map(({ sec, it, n }) => ({
+      id: it.id,
+      label: it.title.trim() || it.org.trim() || `${sec.title} · voce ${n}`,
       tags: splitList(it.skills).map(norm),
       text: norm([it.title, it.bullets].join(" "))
     }));
@@ -416,7 +422,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       lines(s.lines).forEach(l => parseSkillLine(l).skills.forEach(sk => {
         const n = norm(sk);
         if (!n) return;
-        const where = exps.filter(e => e.tags.includes(n) || (n.length > 2 && e.text.includes(n))).map(e => e.label);
+        const where = exps.filter(e => e.tags.includes(n) || (n.length > 2 && e.text.includes(n)));
         res.push({ skill: sk, where });
       }));
     });
@@ -479,12 +485,17 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     }
     if (s.kind === "skills") {
       return fld("Una riga per gruppo · formato “Gruppo: skill, skill”", `${p}.lines`, s.lines, { area: true, rows: 3, ph: "Technical: AutoCAD, CNC lathe\nSoft skills: Teamwork" }) +
-        `<div><p class="eyebrow" style="margin:0 0 6px">Collegamento alle esperienze</p><div class="chips" data-skillchips="${s.id}"></div></div>`;
+        `<div class="howto">
+          <p class="eyebrow" style="margin:0">Collegamento alle esperienze</p>
+          <p class="hint">Un recruiter crede a una skill solo se vede <b>dove l'hai usata</b>. Per ogni skill scritta qui, apri l'esperienza in cui l'hai usata e scrivila nel campo <b>“Skill usate in questa esperienza”</b> (oppure citala in uno dei punti).</p>
+          <p class="hint"><span class="chip ok">verde</span> = collegata a un'esperienza (clicca per andarci) · <span class="chip warn">arancione</span> = non ancora dimostrata</p>
+          <div class="chips" data-skillchips="${s.id}"></div>
+        </div>`;
     }
     // entries
     const items = (s.items || []).map((it, ii) => {
       const q = `${p}.items.${ii}`;
-      return `<div class="entry">
+      return `<div class="entry" id="entry-${it.id}">
         <div class="entry-head"><span class="eyebrow">Voce ${ii + 1}</span>
           <button class="btn ghost small" type="button" data-act="item-up" data-si="${si}" data-ii="${ii}" aria-label="Sposta su">↑</button>
           <button class="btn ghost small" type="button" data-act="item-down" data-si="${si}" data-ii="${ii}" aria-label="Sposta giù">↓</button>
@@ -651,7 +662,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       const list = links.filter(l => mine.has(norm(l.skill)));
       box.innerHTML = list.length
         ? list.map(l => l.where.length
-            ? `<span class="chip ok" title="Usata in: ${esc(l.where.join(", "))}">${esc(l.skill)} → ${esc(l.where[0])}${l.where.length > 1 ? ` +${l.where.length - 1}` : ""}</span>`
+            ? `<button type="button" class="chip ok" data-goto="${l.where[0].id}" title="Usata in: ${esc(l.where.map(w => w.label).join(", "))}">${esc(l.skill)} → ${esc(l.where[0].label)}${l.where.length > 1 ? ` +${l.where.length - 1}` : ""}</button>`
             : `<span class="chip warn" title="Aggiungila alle “Skill usate” di un'esperienza o descrivi dove l'hai usata">${esc(l.skill)} · non dimostrata</span>`).join("")
         : `<span class="hint">Scrivi le tue skill: qui vedrai a quale esperienza è collegata ciascuna.</span>`;
     });
@@ -678,6 +689,12 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   const move = (arr, i, d) => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; };
   let pendingDelete = null;
   $("#editor").addEventListener("click", e => {
+    const go = e.target.closest("[data-goto]");
+    if (go) {
+      const el = document.getElementById("entry-" + go.dataset.goto);
+      if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1500); }
+      return;
+    }
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
     const { act } = btn.dataset;
@@ -752,8 +769,25 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     dlg.close(); renderEditor(); window.scrollTo(0, 0);
   });
 
-  $("#btn-save").addEventListener("click", () => {
+  // dentro claude.ai il download diretto è bloccato: si passa dal salvataggio della pagina
+  const downloadsReady = (window.claude && typeof window.claude.use === "function")
+    ? window.claude.use("downloads").catch(() => null) : Promise.resolve(null);
+
+  $("#btn-save").addEventListener("click", async () => {
     const json = JSON.stringify(Object.assign({}, cv, { example: false }), null, 2);
+    if (embedded) {
+      const downloads = await downloadsReady;
+      if (downloads) {
+        try {
+          await downloads.save({ filename: fileName("json"), data: json });
+          toast("File salvato: riaprilo con “Apri file” per continuare a modificare.");
+          return;
+        } catch (err) {
+          if (err && err.code === "declined") return;
+          if (err && err.code === "rate_limited") { toast("Conferma prima la finestra di salvataggio già aperta."); return; }
+        }
+      }
+    }
     if (!embedded) {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));

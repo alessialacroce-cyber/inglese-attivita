@@ -21,6 +21,7 @@ Non serve installare niente né creare account: funziona nel browser e salva i d
   - **ogni skill è collegata a un'esperienza reale**: nella sezione Competenze ogni skill appare in verde con l'esperienza in cui è stata usata, oppure in arancione “non dimostrata”;
   - lunghezza (una pagina).
 - **Salva file / Apri file**: il CV si salva in un file `.json` da tenere su Drive o chiavetta e da riaprire in seguito. Il lavoro viene anche salvato in automatico nel browser.
+- **Skill collegate**: sotto la sezione Competenze una breve spiegazione dice come collegare ogni skill; cliccando una skill verde si arriva all'esperienza che la dimostra. Un'esperienza conta solo se ha almeno un titolo o un punto descritto.
 - Due **CV di esempio** (meccanica e grafica) con dati inventati, utili per mostrare in classe la formula giusta.
 
 ### La regola su cui si basa il controllo delle skill
