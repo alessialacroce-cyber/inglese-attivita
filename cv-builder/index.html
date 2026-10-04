@@ -303,7 +303,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   ];
   const ACCENTS = ["#1f5f8b", "#2d6a4f", "#8a3b12", "#5b3f8c", "#333a40"];
 
-  const blankEntry = () => ({ id: uid(), title: "", org: "", place: "", start: "", end: "", bullets: "", skills: "" });
+  const blankEntry = () => ({ id: uid(), title: "", org: "", place: "", start: "", end: "", bullets: "" });
   const newSection = (kind, title) => {
     const s = { id: uid(), kind, title };
     if (kind === "text") s.text = "";
@@ -322,21 +322,18 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
         { id: uid(), kind: "text", title: "Profile", text: "Final-year mechanical student with 240 hours of shop-floor experience on CNC lathes. I read technical drawings, set up machines and check parts with precision instruments. Looking for a junior CNC operator or technical office role." },
         { id: uid(), kind: "entries", title: "Internships (PCTO)", items: [
           { id: uid(), title: "CNC Operator Intern", org: "Officine Rossi S.r.l.", place: "Dalmine (BG)", start: "Jun 2025", end: "Jul 2025",
-            bullets: "Set up and ran a Mazak CNC lathe, producing 400+ steel shafts with zero rejected parts\nChecked tolerances of ±0.02 mm with micrometers and calipers on every 10th part\nRewrote 3 ISO G-code programs with my tutor, cutting cycle time by 12%",
-            skills: "CNC lathe, G-code, Precision measurement" },
+            bullets: "Set up and ran a Mazak CNC lathe, producing 400+ steel shafts with zero rejected parts\nUsed precision measurement tools (micrometers, calipers) to check ±0.02 mm tolerances on every 10th part\nRewrote 3 ISO G-code programs with my tutor, cutting cycle time by 12%" },
           { id: uid(), title: "Technical Office Intern", org: "Bianchi Impianti", place: "Bergamo", start: "Feb 2025", end: "Feb 2025",
-            bullets: "Drew 15 component drawings in SolidWorks following ISO standards\nUpdated the bill of materials for a conveyor belt project",
-            skills: "SolidWorks, Technical drawing" }
+            bullets: "Produced 15 technical drawings of components in SolidWorks, following ISO standards\nUpdated the bill of materials for a conveyor belt project" }
         ]},
         { id: uid(), kind: "entries", title: "Projects", items: [
           { id: uid(), title: "Robotic arm (school project)", org: "ITIS – team of 4", place: "", start: "2024", end: "2025",
-            bullets: "Designed the gripper in Fusion 360 and 3D-printed 6 prototypes in PLA\nPresented the project at the school open day to 200+ visitors",
-            skills: "Fusion 360, 3D printing, Teamwork" }
+            bullets: "Designed the gripper in Fusion 360 and tested 6 prototypes made with 3D printing in PLA\nCoordinated teamwork in a group of 4, splitting design, printing and testing to finish 2 weeks early\nPresented the project at the school open day to 200+ visitors" }
         ]},
         { id: uid(), kind: "entries", title: "Education", items: [
-          { id: uid(), title: "Diploma in Mechanics, Mechatronics and Energy", org: "ITIS \"G. Esempio\"", place: "Bergamo", start: "2021", end: "2026", bullets: "Expected grade: 85/100", skills: "" }
+          { id: uid(), title: "Diploma in Mechanics, Mechatronics and Energy", org: "ITIS \"G. Esempio\"", place: "Bergamo", start: "2021", end: "2026", bullets: "Expected grade: 85/100" }
         ]},
-        { id: uid(), kind: "skills", title: "Skills", lines: "Technical: CNC lathe, G-code, SolidWorks, Fusion 360, Technical drawing, Precision measurement, 3D printing, AutoCAD\nSoft skills: Teamwork, Problem solving" },
+        { id: uid(), kind: "skills", title: "Skills", lines: "Technical: CNC lathe, G-code, SolidWorks, Fusion 360, Technical drawing, Precision measurement, 3D printing, AutoCAD\nSoft skills: Teamwork" },
         { id: uid(), kind: "list", title: "Languages", lines: "Italian – native\nEnglish – B2 (school certificate)" }
       ]
     },
@@ -348,18 +345,16 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
         { id: uid(), kind: "text", title: "Profile", text: "Graphic design student who loves clean layouts and print. I have designed brand identities and social campaigns for two local businesses during my internships. Looking for a junior role in a design studio or agency." },
         { id: uid(), kind: "entries", title: "Internships (PCTO)", items: [
           { id: uid(), title: "Graphic Design Intern", org: "Studio Esempio Comunicazione", place: "Milan", start: "May 2025", end: "Jun 2025",
-            bullets: "Designed a new logo and brand guidelines for a local bakery with Illustrator\nLaid out a 24-page product catalogue in InDesign, ready for offset printing\nCreated 30 Instagram posts in Photoshop; the account gained 18% more followers in a month",
-            skills: "Illustrator, Branding, InDesign, Photoshop, Social media" }
+            bullets: "Designed the branding for a local bakery (logo and brand guidelines) in Illustrator\nLaid out a 24-page product catalogue in InDesign, choosing typography and grid, ready for offset printing\nCreated 30 social media posts in Photoshop; the Instagram account gained 18% more followers in a month" }
         ]},
         { id: uid(), kind: "entries", title: "Projects", items: [
           { id: uid(), title: "Poster series for the school theatre", org: "School project", place: "", start: "2025", end: "",
-            bullets: "Illustrated and printed 5 posters in screen printing, 150 copies each",
-            skills: "Illustration, Screen printing" }
+            bullets: "Created 5 theatre posters, from illustration to screen printing, 150 copies each" }
         ]},
         { id: uid(), kind: "entries", title: "Education", items: [
-          { id: uid(), title: "Diploma in Graphics and Communication", org: "IIS \"Esempio\"", place: "Milan", start: "2021", end: "2026", bullets: "", skills: "" }
+          { id: uid(), title: "Diploma in Graphics and Communication", org: "IIS \"Esempio\"", place: "Milan", start: "2021", end: "2026", bullets: "" }
         ]},
-        { id: uid(), kind: "skills", title: "Skills", lines: "Software: Illustrator, InDesign, Photoshop, Figma\nDesign: Branding, Illustration, Screen printing, Typography\nSoft skills: Social media, Time management" },
+        { id: uid(), kind: "skills", title: "Skills", lines: "Software: Illustrator, InDesign, Photoshop, Figma\nDesign: Branding, Illustration, Screen printing, Typography\nMarketing: Social media" },
         { id: uid(), kind: "list", title: "Languages", lines: "Italian – native\nEnglish – B1" }
       ]
     }
@@ -413,17 +408,19 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     const exps = experienceEntries().filter(({ it }) => it.title.trim() || it.bullets.trim()).map(({ sec, it, n }) => ({
       id: it.id,
       label: it.title.trim() || it.org.trim() || `${sec.title} · voce ${n}`,
-      tags: splitList(it.skills).map(norm),
-      text: norm([it.title, it.bullets].join(" "))
+      bullets: lines(it.bullets).map(norm)
     }));
+    const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const res = [];
     cv.sections.forEach(s => {
       if (s.kind !== "skills") return;
       lines(s.lines).forEach(l => parseSkillLine(l).skills.forEach(sk => {
         const n = norm(sk);
         if (!n) return;
-        const where = exps.filter(e => e.tags.includes(n) || (n.length > 2 && e.text.includes(n)));
-        res.push({ skill: sk, where });
+        // parola intera (anche al plurale) dentro una frase che racconta cosa hai fatto
+        const re = new RegExp("(^|[^a-z0-9])" + reEsc(n) + "s?(?![a-z0-9])");
+        const where = exps.filter(e => e.bullets.some(b => re.test(b)));
+        res.push({ skill: sk, re, where });
       }));
     });
     return res;
@@ -454,9 +451,13 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     const links = skillLinks();
     const linked = links.filter(l => l.where.length).length;
     if (links.length) {
-      add(linked === links.length ? "ok" : "warn", `Skill dimostrate da un'esperienza: ${linked} su ${links.length}`, linked === links.length ? "" : "Ogni skill deve comparire in un'esperienza reale. Vedi le skill in arancione nella sezione Competenze.");
+      add(linked === links.length ? "ok" : "warn", `Skill dimostrate in una frase: ${linked} su ${links.length}`, linked === links.length ? "" : "Ogni skill dell'elenco deve comparire in un punto che racconta cosa hai fatto. Togli quelle che non sai dimostrare: vedi le skill in arancione.");
+      if (links.length > 14) add("warn", `Elenco competenze lungo: ${links.length} skill`, "Un elenco lunghissimo sembra keyword stuffing. Tieni le 8–12 più utili per il lavoro che cerchi.");
+      // un punto che contiene tante skill è un elenco di parole chiave travestito
+      const stuffed = allBullets.filter(b => links.filter(l => l.re.test(norm(b))).length >= 4);
+      if (stuffed.length) add("warn", `Punti carichi di parole chiave: ${stuffed.length}`, `Es. “${stuffed[0].slice(0, 60)}…”. Massimo 2–3 skill per punto, ognuna con cosa hai fatto e il risultato.`);
     } else {
-      add("warn", "Sezione competenze", "Aggiungi una sezione Competenze con le tue skill principali.");
+      add("warn", "Sezione competenze", "Aggiungi una sezione Competenze con le skill che dimostri nelle esperienze.");
     }
 
     const lenOk = words >= 150 && words <= 650;
@@ -487,8 +488,8 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       return fld("Una riga per gruppo · formato “Gruppo: skill, skill”", `${p}.lines`, s.lines, { area: true, rows: 3, ph: "Technical: AutoCAD, CNC lathe\nSoft skills: Teamwork" }) +
         `<div class="howto">
           <p class="eyebrow" style="margin:0">Collegamento alle esperienze</p>
-          <p class="hint">Un recruiter crede a una skill solo se vede <b>dove l'hai usata</b>. Per ogni skill scritta qui, apri l'esperienza in cui l'hai usata e scrivila nel campo <b>“Skill usate in questa esperienza”</b> (oppure citala in uno dei punti).</p>
-          <p class="hint"><span class="chip ok">verde</span> = collegata a un'esperienza (clicca per andarci) · <span class="chip warn">arancione</span> = non ancora dimostrata</p>
+          <p class="hint">Un recruiter crede a una skill solo se la vede <b>in azione</b>. Ogni skill di questo elenco deve comparire, con le stesse parole, in un punto di un'esperienza che dice cosa hai fatto e con che risultato. Esempio: <i>“Produced 15 technical drawings in SolidWorks, following ISO standards”</i>.</p>
+          <p class="hint"><span class="chip ok">verde</span> = dimostrata in una frase (clicca per andarci) · <span class="chip warn">arancione</span> = scrivi dove l'hai usata, oppure toglila</p>
           <div class="chips" data-skillchips="${s.id}"></div>
         </div>`;
     }
@@ -506,8 +507,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
           ${fld("Azienda / scuola", `${q}.org`, it.org, { ph: "Officine Rossi S.r.l." })}
           ${fld("Luogo", `${q}.place`, it.place, { ph: "Bergamo" })}
           <div class="grid2">${fld("Inizio", `${q}.start`, it.start, { ph: "Jun 2025" })}${fld("Fine", `${q}.end`, it.end, { ph: "Present" })}</div>
-          ${fld("Cosa hai fatto · un punto per riga", `${q}.bullets`, it.bullets, { area: true, rows: 4, span: true, ph: "Verbo d'azione + cosa + risultato con un numero\nAssembled 40 gearboxes per week with zero defects", hint: "Formula: <b>verbo</b> + <b>attività</b> + <b>strumento/skill</b> + <b>risultato misurabile</b>." })}
-          ${fld("Skill usate in questa esperienza", `${q}.skills`, it.skills, { span: true, ph: "SolidWorks, Precision measurement, Teamwork", hint: "Separate da virgole. Devono essere le stesse parole della sezione Competenze." })}
+          ${fld("Cosa hai fatto · un punto per riga", `${q}.bullets`, it.bullets, { area: true, rows: 4, span: true, ph: "Verbo d'azione + cosa + risultato con un numero\nAssembled 40 gearboxes per week with zero defects", hint: "Formula: <b>verbo</b> + <b>attività</b> + <b>skill/strumento</b> + <b>risultato misurabile</b>. Le skill del tuo elenco Competenze vanno scritte qui dentro, nella frase." })}
         </div>
       </div>`;
     }).join("");
@@ -663,7 +663,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       box.innerHTML = list.length
         ? list.map(l => l.where.length
             ? `<button type="button" class="chip ok" data-goto="${l.where[0].id}" title="Usata in: ${esc(l.where.map(w => w.label).join(", "))}">${esc(l.skill)} → ${esc(l.where[0].label)}${l.where.length > 1 ? ` +${l.where.length - 1}` : ""}</button>`
-            : `<span class="chip warn" title="Aggiungila alle “Skill usate” di un'esperienza o descrivi dove l'hai usata">${esc(l.skill)} · non dimostrata</span>`).join("")
+            : `<span class="chip warn" title="Scrivi in un punto di un'esperienza come l'hai usata e con che risultato, oppure toglila dall'elenco">${esc(l.skill)} · non dimostrata</span>`).join("")
         : `<span class="hint">Scrivi le tue skill: qui vedrai a quale esperienza è collegata ciascuna.</span>`;
     });
   }

@@ -6,7 +6,7 @@ Non serve installare niente né creare account: funziona nel browser e salva i d
 ## Cosa fa (versione 1)
 
 - **Sezioni libere**: lo studente aggiunge le sezioni che vuole (Profilo, Esperienze, Stage e PCTO, Progetti, Istruzione, Competenze, Lingue, Certificazioni, Interessi) oppure ne crea di personalizzate, le rinomina, le riordina e le elimina.
-- **Quattro tipi di sezione**: *Paragrafo* (testo libero), *Esperienze* (ruolo, azienda, luogo, date, punti elenco, skill usate), *Competenze* (gruppi di skill), *Elenco* (una voce per riga).
+- **Quattro tipi di sezione**: *Paragrafo* (testo libero), *Esperienze* (ruolo, azienda, luogo, date, punti elenco), *Competenze* (gruppi di skill), *Elenco* (una voce per riga).
 - **Tre stili grafici** pensati per una sola colonna, leggibili dagli ATS:
   - *Tecnico* (sans tecnica, filetti sotto i titoli): indicato per meccanica;
   - *Grafico* (titoli compatti, barra colorata): indicato per grafica;
@@ -21,13 +21,18 @@ Non serve installare niente né creare account: funziona nel browser e salva i d
   - **ogni skill è collegata a un'esperienza reale**: nella sezione Competenze ogni skill appare in verde con l'esperienza in cui è stata usata, oppure in arancione “non dimostrata”;
   - lunghezza (una pagina).
 - **Salva file / Apri file**: il CV si salva in un file `.json` da tenere su Drive o chiavetta e da riaprire in seguito. Il lavoro viene anche salvato in automatico nel browser.
-- **Skill collegate**: sotto la sezione Competenze una breve spiegazione dice come collegare ogni skill; cliccando una skill verde si arriva all'esperienza che la dimostra. Un'esperienza conta solo se ha almeno un titolo o un punto descritto.
+- **Skill collegate**: sotto la sezione Competenze una breve spiegazione dice come collegare ogni skill; cliccando una skill verde si arriva al punto che la dimostra.
 - Due **CV di esempio** (meccanica e grafica) con dati inventati, utili per mostrare in classe la formula giusta.
 
 ### La regola su cui si basa il controllo delle skill
 
-Ogni voce di esperienza ha un campo **“Skill usate in questa esperienza”**. Una skill della sezione Competenze è considerata *dimostrata* se compare in quel campo oppure nel testo dei punti di un'esperienza.
+Una skill della sezione Competenze è *dimostrata* solo se compare, con le stesse parole, **dentro un punto** di un'esperienza, cioè in una frase che dice cosa lo studente ha fatto e con che risultato. Non basta un'etichetta o un elenco: sarebbe keyword stuffing.
 Così lo studente è costretto a rispondere alla domanda: *dove l'ho usata e con che risultato?*
+
+Contro il keyword stuffing il controllo segnala anche:
+- le skill che non compaiono in nessuna frase (in arancione: o le dimostri o le togli);
+- un elenco Competenze con più di 14 skill;
+- i punti che contengono 4 o più skill (un elenco di parole chiave travestito da frase).
 
 Formula consigliata per ogni punto:
 **verbo d'azione + attività + strumento/skill + risultato con un numero**
@@ -61,7 +66,7 @@ Obiettivo: un assistente dentro CV Lab che, per ogni esperienza, aiuti lo studen
 2. individuare le skill dimostrate da quell'esperienza e collegarle alla sezione Competenze;
 3. segnalare le skill dichiarate ma non dimostrate e fare domande per trovare l'esperienza reale in cui sono state usate (senza mai inventare).
 
-Il codice della v1 è già predisposto: ogni esperienza ha il campo “skill usate” e il controllo calcola quali skill non sono collegate. L'AI lavorerà su questi stessi dati.
+Il codice della v1 è già predisposto: il controllo calcola quali skill non compaiono in nessuna frase. L'AI lavorerà su questi stessi dati, aiutando a riconoscere anche i sinonimi (es. “worked in a team of 4” → Teamwork) che il controllo automatico non capisce.
 
 Opzioni gratuite per 21 studenti:
 
