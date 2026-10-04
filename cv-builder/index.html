@@ -122,7 +122,20 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .chip { font-size: 12.5px; border-radius: 99px; padding: 2px 10px; border: 1px solid; }
 button.chip { cursor: pointer; font-size: 12.5px; }
 button.chip:hover { text-decoration: underline; }
-.howto { display: flex; flex-direction: column; gap: 8px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.howto { display: flex; flex-direction: column; gap: 10px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.howto-title { margin: 0; font-weight: 700; }
+.steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.skill-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.skill-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 7px 10px; border-radius: var(--radius); font-size: 14px; }
+.skill-row.ok { background: var(--ok-bg); }
+.skill-row.warn { background: var(--warn-bg); }
+.skill-row .sk { font-weight: 700; }
+.skill-row.ok .st { color: var(--ok); }
+.skill-row.warn .st { color: var(--warn); }
+.skill-row .st { margin-right: auto; min-width: 0; }
+.check-line { font-size: 13.5px; margin: 0; }
+.check-line.ok { color: var(--ok); }
+.check-line.warn { color: var(--warn); }
 .entry.flash { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 .chip.ok { color: var(--ok); background: var(--ok-bg); border-color: transparent; }
 .chip.warn { color: var(--warn); background: var(--warn-bg); border-color: transparent; }
@@ -205,6 +218,7 @@ dialog .body { padding: 16px; display: flex; flex-direction: column; gap: 12px; 
 dialog h3 { margin: 0; font-size: 17px; }
 dialog p { margin: 0; }
 dialog textarea { width: 100%; min-height: 180px; font: 12px var(--font-label); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); padding: 8px; }
+dialog .field textarea { font: 15px/1.5 var(--font-ui); min-height: 80px; }
 dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 
 .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: var(--radius); font-size: 14px; z-index: 50; }
@@ -403,6 +417,18 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     cv.sections.forEach(s => { if (s.kind === "entries") (s.items || []).forEach((it, i) => out.push({ sec: s, it, n: i + 1 })); });
     return out;
   }
+  const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  function skillRegex(n) {
+    const core = n.replace(/-/g, " ").split(" ").filter(Boolean).map(reEsc).join("[\\s-]?");
+    return new RegExp("(^|[^a-z0-9])" + core + "s?(?![a-z0-9])");
+  }
+  const mentions = (skill, sentence) => {
+    const n = norm(skill), t = norm(sentence);
+    if (skillRegex(n).test(t)) return true;
+    // "teamwork" scritto "team work": confronto senza spazi né trattini
+    const c = n.replace(/[\s-]/g, "");
+    return c.length >= 6 && t.replace(/[\s-]/g, "").includes(c);
+  };
   function skillLinks() {
     // conta solo le esperienze descritte davvero: serve almeno un titolo o un punto
     const exps = experienceEntries().filter(({ it }) => it.title.trim() || it.bullets.trim()).map(({ sec, it, n }) => ({
@@ -410,7 +436,6 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       label: it.title.trim() || it.org.trim() || `${sec.title} · voce ${n}`,
       bullets: lines(it.bullets).map(norm)
     }));
-    const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const res = [];
     cv.sections.forEach(s => {
       if (s.kind !== "skills") return;
@@ -418,8 +443,8 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
         const n = norm(sk);
         if (!n) return;
         // parola intera (anche al plurale) dentro una frase che racconta cosa hai fatto
-        const re = new RegExp("(^|[^a-z0-9])" + reEsc(n) + "s?(?![a-z0-9])");
-        const where = exps.filter(e => e.bullets.some(b => re.test(b)));
+        const re = skillRegex(n);
+        const where = exps.filter(e => e.bullets.some(b => mentions(n, b)));
         res.push({ skill: sk, re, where });
       }));
     });
@@ -454,7 +479,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       add(linked === links.length ? "ok" : "warn", `Skill dimostrate in una frase: ${linked} su ${links.length}`, linked === links.length ? "" : "Ogni skill dell'elenco deve comparire in un punto che racconta cosa hai fatto. Togli quelle che non sai dimostrare: vedi le skill in arancione.");
       if (links.length > 14) add("warn", `Elenco competenze lungo: ${links.length} skill`, "Un elenco lunghissimo sembra keyword stuffing. Tieni le 8–12 più utili per il lavoro che cerchi.");
       // un punto che contiene tante skill è un elenco di parole chiave travestito
-      const stuffed = allBullets.filter(b => links.filter(l => l.re.test(norm(b))).length >= 4);
+      const stuffed = allBullets.filter(b => links.filter(l => mentions(l.skill, b)).length >= 4);
       if (stuffed.length) add("warn", `Punti carichi di parole chiave: ${stuffed.length}`, `Es. “${stuffed[0].slice(0, 60)}…”. Massimo 2–3 skill per punto, ognuna con cosa hai fatto e il risultato.`);
     } else {
       add("warn", "Sezione competenze", "Aggiungi una sezione Competenze con le skill che dimostri nelle esperienze.");
@@ -487,10 +512,13 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     if (s.kind === "skills") {
       return fld("Una riga per gruppo · formato “Gruppo: skill, skill”", `${p}.lines`, s.lines, { area: true, rows: 3, ph: "Technical: AutoCAD, CNC lathe\nSoft skills: Teamwork" }) +
         `<div class="howto">
-          <p class="eyebrow" style="margin:0">Collegamento alle esperienze</p>
-          <p class="hint">Un recruiter crede a una skill solo se la vede <b>in azione</b>. Ogni skill di questo elenco deve comparire, con le stesse parole, in un punto di un'esperienza che dice cosa hai fatto e con che risultato. Esempio: <i>“Produced 15 technical drawings in SolidWorks, following ISO standards”</i>.</p>
-          <p class="hint"><span class="chip ok">verde</span> = dimostrata in una frase (clicca per andarci) · <span class="chip warn">arancione</span> = scrivi dove l'hai usata, oppure toglila</p>
-          <div class="chips" data-skillchips="${s.id}"></div>
+          <p class="howto-title">Ogni skill deve essere dimostrata da una frase vera</p>
+          <ol class="steps">
+            <li>Scrivi le tue skill nel riquadro qui sopra.</li>
+            <li>Per ogni skill <b>arancione</b> premi <b>Dimostrala</b>.</li>
+            <li>Scegli dove l'hai usata e scrivi una frase. La frase entra nel CV e la skill diventa <b>verde</b>.</li>
+          </ol>
+          <ul class="skill-rows" data-skillchips="${s.id}"></ul>
         </div>`;
     }
     // entries
@@ -662,9 +690,9 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       const list = links.filter(l => mine.has(norm(l.skill)));
       box.innerHTML = list.length
         ? list.map(l => l.where.length
-            ? `<button type="button" class="chip ok" data-goto="${l.where[0].id}" title="Usata in: ${esc(l.where.map(w => w.label).join(", "))}">${esc(l.skill)} → ${esc(l.where[0].label)}${l.where.length > 1 ? ` +${l.where.length - 1}` : ""}</button>`
-            : `<span class="chip warn" title="Scrivi in un punto di un'esperienza come l'hai usata e con che risultato, oppure toglila dall'elenco">${esc(l.skill)} · non dimostrata</span>`).join("")
-        : `<span class="hint">Scrivi le tue skill: qui vedrai a quale esperienza è collegata ciascuna.</span>`;
+            ? `<li class="skill-row ok"><span class="sk">✓ ${esc(l.skill)}</span><span class="st">dimostrata in: ${esc(l.where.map(w => w.label).join(", "))}</span><button type="button" class="btn small" data-goto="${l.where[0].id}">Vedi la frase</button></li>`
+            : `<li class="skill-row warn"><span class="sk">! ${esc(l.skill)}</span><span class="st">non ancora dimostrata</span><button type="button" class="btn small primary" data-prove="${esc(l.skill)}">Dimostrala</button><button type="button" class="btn small ghost" data-drop="${esc(l.skill)}" data-sec="${s.id}">Toglila</button></li>`).join("")
+        : `<li class="hint">Qui comparirà ogni skill che scrivi, verde o arancione.</li>`;
     });
   }
 
@@ -695,6 +723,10 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1500); }
       return;
     }
+    const prove = e.target.closest("[data-prove]");
+    if (prove) { openProve(prove.dataset.prove); return; }
+    const drop = e.target.closest("[data-drop]");
+    if (drop) { dropSkill(drop.dataset.sec, drop.dataset.drop); return; }
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
     const { act } = btn.dataset;
@@ -848,6 +880,63 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
       <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="do-print">Apri la stampa</button></div>`);
     $("#do-print").addEventListener("click", () => { dlg.close(); setTimeout(() => { window.print(); document.title = prev; }, 50); });
   });
+
+  /* ---------- “Dimostrala”: skill → esperienza → frase ---------- */
+  function dropSkill(secId, skill) {
+    const s = cv.sections.find(x => x.id === secId);
+    if (!s) return;
+    const target = norm(skill);
+    s.lines = lines(s.lines).map(l => {
+      const g = parseSkillLine(l);
+      const rest = g.skills.filter(k => norm(k) !== target);
+      if (!rest.length) return null;
+      return (g.label ? g.label + ": " : "") + rest.join(", ");
+    }).filter(Boolean).join("\n");
+    renderEditor();
+    toast(`“${skill}” tolta dall'elenco`);
+  }
+
+  function openProve(skill) {
+    const exps = experienceEntries().filter(({ it }) => it.title.trim() || it.org.trim() || it.bullets.trim());
+    if (!exps.length) {
+      openDialog(`<h3>Dimostra: ${esc(skill)}</h3>
+        <p>Prima ti serve almeno un'esperienza: uno stage/PCTO, un progetto di scuola, un lavoretto. Aggiungila con <b>+ Internships (PCTO)</b> o <b>+ Projects</b> in fondo alla pagina, scrivi il titolo, poi torna qui.</p>
+        <div class="foot"><button class="btn primary" type="button" data-close>Ok</button></div>`);
+      return;
+    }
+    const opts = exps.map(({ sec, it, n }) => `<option value="${it.id}">${esc(sec.title)} — ${esc(it.title.trim() || it.org.trim() || "voce " + n)}</option>`).join("");
+    openDialog(`<h3>Dimostra: ${esc(skill)}</h3>
+      <div class="field"><label for="prove-where"><b>1.</b> Dove hai usato “${esc(skill)}”?</label><select id="prove-where">${opts}</select></div>
+      <div class="field"><label for="prove-text"><b>2.</b> Scrivi una frase su cosa hai fatto. Deve contenere la parola “${esc(skill)}”.</label>
+        <textarea id="prove-text" rows="3" placeholder="Verbo + cosa hai fatto + ${esc(skill)} + risultato con un numero"></textarea>
+        <p class="hint">Esempio: <i>Used ${esc(skill)} to … in a team of 4 and finished 2 weeks early</i></p>
+        <p class="check-line warn" id="prove-check">Manca ancora la parola “${esc(skill)}”.</p>
+      </div>
+      <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="prove-add" disabled>Aggiungi al CV</button></div>`);
+    const ta = $("#prove-text"), chk = $("#prove-check"), add = $("#prove-add");
+    const validate = () => {
+      const t = ta.value.trim();
+      const ok = t.split(/\s+/).length >= 5 && mentions(skill, t);
+      add.disabled = !ok;
+      chk.className = "check-line " + (ok ? "ok" : "warn");
+      chk.textContent = !mentions(skill, t) ? `Manca ancora la parola “${skill}”.`
+        : !ok ? "Scrivi una frase completa: cosa hai fatto e con che risultato."
+        : "✓ Perfetto: questa frase dimostra la skill.";
+    };
+    ta.addEventListener("input", validate);
+    add.addEventListener("click", () => {
+      const id = $("#prove-where").value;
+      const hit = experienceEntries().find(x => x.it.id === id);
+      if (!hit) return;
+      hit.it.bullets = [hit.it.bullets.replace(/\s+$/, ""), ta.value.trim()].filter(Boolean).join("\n");
+      dlg.close();
+      renderEditor();
+      const el = document.getElementById("entry-" + id);
+      if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1500); }
+      toast(`Fatto: “${skill}” ora è dimostrata`);
+    });
+    setTimeout(() => ta.focus(), 30);
+  }
 
   renderEditor();
 })();
