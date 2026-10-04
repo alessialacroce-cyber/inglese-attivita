@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CV Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600;700&family=Archivo:wght@400;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: workbench a due colonne — a sinistra il banco di lavoro (controlli + sezioni), a destra il foglio A4 che si aggiorna dal vivo. */
+:root {
+  --bg: #eef1f3;
+  --surface: #ffffff;
+  --surface-2: #f6f8f9;
+  --line: #d5dce1;
+  --fg: #1b2329;
+  --muted: #5b6872;
+  --accent: #1f5f8b;
+  --accent-ink: #ffffff;
+  --ok: #2f7d4f;
+  --ok-bg: #e3f2e8;
+  --warn: #9a5b00;
+  --warn-bg: #fdf0d9;
+  --bad: #b3261e;
+  --bad-bg: #fbe4e2;
+  /* il foglio resta carta bianca in entrambi i temi */
+  --paper: #ffffff;
+  --ink: #1d1d1f;
+  --ink-soft: #55595f;
+  --cv-accent: #1f5f8b;
+  --font-ui: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12171b; --surface: #1a2126; --surface-2: #20282e; --line: #33404a;
+    --fg: #e4e9ec; --muted: #9aa8b2; --accent: #6fb1e0; --accent-ink: #0d1a24;
+    --ok: #7fd19d; --ok-bg: #1d3326; --warn: #f0b860; --warn-bg: #3a2c14;
+    --bad: #f2948d; --bad-bg: #3d1e1c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12171b; --surface: #1a2126; --surface-2: #20282e; --line: #33404a;
+  --fg: #e4e9ec; --muted: #9aa8b2; --accent: #6fb1e0; --accent-ink: #0d1a24;
+  --ok: #7fd19d; --ok-bg: #1d3326; --warn: #f0b860; --warn-bg: #3a2c14;
+  --bad: #f2948d; --bad-bg: #3d1e1c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font-ui); }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- barra superiore ---------- */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand b { font-size: 18px; letter-spacing: .01em; }
+.brand span { font: 12px var(--font-label); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn {
+  border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius);
+  padding: 6px 12px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--fg); }
+.btn.small { padding: 3px 8px; font-size: 13px; }
+.btn.danger:hover { border-color: var(--bad); color: var(--bad); }
+
+/* ---------- area di lavoro ---------- */
+.workspace {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px;
+  padding-inline: 16px; padding-block: 20px 60px; max-width: 1500px; margin: 0 auto;
+}
+.editor { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.preview-col { min-width: 0; }
+.preview-sticky { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 70px); display: flex; flex-direction: column; gap: 10px; }
+.tabs { display: none; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.panel > header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+}
+.panel > header h2 { margin: 0; font-size: 15px; margin-right: auto; text-wrap: balance; }
+.panel .body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.eyebrow { font: 11px var(--font-label); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field label { font-size: 13px; color: var(--muted); }
+.field input, .field textarea, .field select {
+  width: 100%; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface-2); padding: 7px 9px;
+}
+.field textarea { resize: vertical; min-height: 70px; }
+.field input:focus, .field textarea:focus { border-color: var(--accent); background: var(--surface); outline: none; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+/* sezioni */
+.sec-title { font-weight: 700; border: 1px solid transparent; background: transparent; padding: 3px 6px; border-radius: var(--radius); min-width: 0; flex: 1 1 160px; }
+.sec-title:hover, .sec-title:focus { border-color: var(--line); background: var(--surface-2); outline: none; }
+.kind { font: 11px var(--font-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 1px 8px; }
+.entry { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; gap: 10px; background: var(--surface-2); }
+.entry-head { display: flex; align-items: center; gap: 8px; }
+.entry-head .eyebrow { margin-right: auto; }
+
+.add-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.add-row .btn { font-size: 13px; }
+
+/* chip skill */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; border-radius: 99px; padding: 2px 10px; border: 1px solid; }
+.chip.ok { color: var(--ok); background: var(--ok-bg); border-color: transparent; }
+.chip.warn { color: var(--warn); background: var(--warn-bg); border-color: transparent; }
+
+/* controlli */
+.score { display: flex; align-items: center; gap: 12px; }
+.meter { flex: 1; height: 8px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+.score b { font: 600 14px var(--font-label); font-variant-numeric: tabular-nums; min-width: 4ch; text-align: right; }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px; font-size: 14px; align-items: start; }
+.checks .dot { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; margin-top: 2px; }
+.checks .ok .dot { background: var(--ok-bg); color: var(--ok); }
+.checks .warn .dot { background: var(--warn-bg); color: var(--warn); }
+.checks .bad .dot { background: var(--bad-bg); color: var(--bad); }
+.checks small { display: block; color: var(--muted); font-size: 12.5px; }
+details.tips summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+details.tips ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; display: flex; flex-direction: column; gap: 4px; }
+
+/* stile CV */
+.style-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.seg button { border: 0; background: var(--surface); padding: 5px 12px; cursor: pointer; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--fg); }
+
+.example-flag { font-size: 13px; background: var(--warn-bg); color: var(--warn); border-radius: var(--radius); padding: 8px 12px; }
+
+/* ---------- foglio A4 ---------- */
+.sheet-frame { overflow: hidden; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 8px 30px rgba(20,40,60,.12); background: var(--paper); }
+.sheet-scaler { transform-origin: top left; width: 210mm; }
+.sheet {
+  width: 210mm; min-height: 297mm; padding: 16mm 17mm; background: var(--paper); color: var(--ink);
+  font-size: 10pt; line-height: 1.42;
+}
+.page-note { font: 12px var(--font-label); color: var(--muted); text-align: center; }
+
+.cv-name { margin: 0; font-size: 24pt; line-height: 1.1; text-wrap: balance; }
+.cv-headline { margin: 3pt 0 0; font-size: 11.5pt; color: var(--cv-accent); font-weight: 600; }
+.cv-contacts { margin: 7pt 0 0; color: var(--ink-soft); font-size: 9.3pt; display: flex; flex-wrap: wrap; gap: 2pt 0; }
+.cv-contacts span + span::before { content: "|"; margin: 0 6pt; color: #b5b9be; }
+.cv-section { margin-top: 13pt; break-inside: auto; }
+.cv-section h2 { margin: 0 0 6pt; font-size: 10.5pt; text-transform: uppercase; letter-spacing: .08em; color: var(--cv-accent); }
+.cv-item { margin-bottom: 8pt; break-inside: avoid; }
+.cv-item:last-child { margin-bottom: 0; }
+.cv-row { display: flex; justify-content: space-between; gap: 10pt; align-items: baseline; }
+.cv-row strong { font-size: 10.5pt; }
+.cv-date { white-space: nowrap; color: var(--ink-soft); font-size: 9.3pt; font-variant-numeric: tabular-nums; }
+.cv-org { color: var(--ink-soft); }
+.cv-item ul, .cv-list { margin: 3pt 0 0; padding-left: 13pt; }
+.cv-item li, .cv-list li { margin-bottom: 1.5pt; }
+.cv-skillline { margin: 0 0 2pt; }
+.cv-skillline b { font-weight: 600; }
+.cv-text { margin: 0; white-space: pre-line; }
+.cv-used { margin: 3pt 0 0; font-size: 9pt; color: var(--ink-soft); }
+
+/* Tecnico — per meccanica: sans tecnica, filetto sotto i titoli come una quota */
+.cv-tecnico { font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif; }
+.cv-tecnico .cv-header { border-bottom: 1.2pt solid var(--cv-accent); padding-bottom: 9pt; }
+.cv-tecnico .cv-section h2 { border-bottom: .5pt solid #c9ced3; padding-bottom: 2pt; }
+/* Grafico — per grafica: titoli grandi e compatti, accento come blocco tipografico */
+.cv-grafico { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; }
+.cv-grafico .cv-name { font-size: 28pt; font-weight: 800; letter-spacing: -.02em; }
+.cv-grafico .cv-header { border-left: 5pt solid var(--cv-accent); padding-left: 10pt; }
+.cv-grafico .cv-section h2 { letter-spacing: .14em; font-weight: 800; color: var(--ink); }
+.cv-grafico .cv-section h2::after { content: ""; display: block; width: 22pt; height: 2.5pt; background: var(--cv-accent); margin-top: 3pt; }
+/* Classico — serif sobrio, va bene per qualsiasi candidatura */
+.cv-classico { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; }
+.cv-classico .cv-header { text-align: center; }
+.cv-classico .cv-contacts { justify-content: center; }
+.cv-classico .cv-section h2 { text-align: left; border-bottom: .5pt solid var(--ink); padding-bottom: 2pt; color: var(--ink); }
+.cv-classico .cv-headline { color: var(--ink-soft); font-style: italic; font-weight: 400; }
+
+/* ---------- dialog ---------- */
+dialog { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--fg); max-width: min(560px, calc(100vw - 32px)); width: 100%; padding: 0; }
+dialog::backdrop { background: rgba(10, 20, 30, .45); }
+dialog .body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+dialog h3 { margin: 0; font-size: 17px; }
+dialog p { margin: 0; }
+dialog textarea { width: 100%; min-height: 180px; font: 12px var(--font-label); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); padding: 8px; }
+dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: var(--radius); font-size: 14px; z-index: 50; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  .tabs { display: flex; gap: 6px; padding-inline: 16px; padding-block: 12px 0; }
+  .tabs .seg { width: 100%; }
+  .tabs .seg button { flex: 1; }
+  body[data-view="edit"] .preview-col { display: none; }
+  body[data-view="preview"] .editor { display: none; }
+  .preview-sticky { position: static; }
+  .topbar { position: static; }
+}
+@media (max-width: 520px) {
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .brand span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .meter i { transition: none; } }
+
+/* ---------- stampa / PDF ---------- */
+@page { size: A4; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .topbar, .tabs, .editor, .page-note, .toast, dialog { display: none !important; }
+  .workspace { display: block; padding: 0; max-width: none; }
+  .preview-col { display: block !important; }
+  .preview-sticky { position: static; }
+  .sheet-frame { box-shadow: none; overflow: visible; height: auto !important; }
+  .sheet-scaler { transform: none !important; }
+  .sheet { min-height: 0; }
+}
+</style>
+</head>
+<body data-view="edit">
+
+<div class="topbar">
+  <div class="brand"><b>CV Lab</b><span>CV builder · classi quinte</span></div>
+  <div class="actions">
+    <button class="btn" id="btn-new" type="button">Nuovo CV</button>
+    <button class="btn" id="btn-open" type="button">Apri file</button>
+    <button class="btn" id="btn-save" type="button">Salva file</button>
+    <button class="btn primary" id="btn-pdf" type="button">Scarica PDF</button>
+  </div>
+  <input type="file" id="file-in" accept=".json,application/json" hidden>
+</div>
+
+<div class="tabs">
+  <div class="seg" role="group" aria-label="Vista">
+    <button type="button" data-view="edit" aria-pressed="true">Modifica</button>
+    <button type="button" data-view="preview" aria-pressed="false">Anteprima</button>
+  </div>
+</div>
+
+<main class="workspace">
+  <section class="editor" id="editor" aria-label="Editor del CV"></section>
+  <section class="preview-col" aria-label="Anteprima del CV">
+    <div class="preview-sticky">
+      <div class="sheet-frame" id="sheet-frame"><div class="sheet-scaler" id="sheet-scaler"><article class="sheet" id="sheet"></article></div></div>
+      <p class="page-note" id="page-note">A4 · 210 × 297 mm</p>
+    </div>
+  </section>
+</main>
+
+<dialog id="dlg"><div class="body" id="dlg-body"></div></dialog>
+
+<script>
+(() => {
+  "use strict";
+  const STORE_KEY = "cvlab.v1";
+  const uid = () => Math.random().toString(36).slice(2, 9);
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  let embedded = false;
+  try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+
+  /* ---------- tipi di sezione ---------- */
+  const KINDS = {
+    text:    { label: "Paragrafo" },
+    entries: { label: "Esperienze" },
+    skills:  { label: "Competenze" },
+    list:    { label: "Elenco" }
+  };
+  const PRESETS = [
+    { kind: "text",    en: "Profile",            it: "Profilo" },
+    { kind: "entries", en: "Work Experience",    it: "Esperienze lavorative" },
+    { kind: "entries", en: "Internships (PCTO)", it: "Stage e PCTO" },
+    { kind: "entries", en: "Projects",           it: "Progetti" },
+    { kind: "entries", en: "Education",          it: "Istruzione" },
+    { kind: "skills",  en: "Skills",             it: "Competenze" },
+    { kind: "list",    en: "Languages",          it: "Lingue" },
+    { kind: "list",    en: "Certifications",     it: "Certificazioni" },
+    { kind: "list",    en: "Interests",          it: "Interessi" }
+  ];
+  const ACCENTS = ["#1f5f8b", "#2d6a4f", "#8a3b12", "#5b3f8c", "#333a40"];
+
+  const blankEntry = () => ({ id: uid(), title: "", org: "", place: "", start: "", end: "", bullets: "", skills: "" });
+  const newSection = (kind, title) => {
+    const s = { id: uid(), kind, title };
+    if (kind === "text") s.text = "";
+    if (kind === "entries") s.items = [blankEntry()];
+    if (kind === "skills" || kind === "list") s.lines = "";
+    return s;
+  };
+
+  /* ---------- esempi (dati inventati, segnalati come tali) ---------- */
+  const EXAMPLES = {
+    meccanica: {
+      example: true,
+      meta: { style: "tecnico", accent: "#1f5f8b", lang: "en" },
+      header: { name: "Marco Esempio", headline: "Mechanical Technician – CNC & CAD", email: "marco.esempio@email.it", phone: "+39 333 000 0000", city: "Bergamo, Italy", links: "linkedin.com/in/marco-esempio" },
+      sections: [
+        { id: uid(), kind: "text", title: "Profile", text: "Final-year mechanical student with 240 hours of shop-floor experience on CNC lathes. I read technical drawings, set up machines and check parts with precision instruments. Looking for a junior CNC operator or technical office role." },
+        { id: uid(), kind: "entries", title: "Internships (PCTO)", items: [
+          { id: uid(), title: "CNC Operator Intern", org: "Officine Rossi S.r.l.", place: "Dalmine (BG)", start: "Jun 2025", end: "Jul 2025",
+            bullets: "Set up and ran a Mazak CNC lathe, producing 400+ steel shafts with zero rejected parts\nChecked tolerances of ±0.02 mm with micrometers and calipers on every 10th part\nRewrote 3 ISO G-code programs with my tutor, cutting cycle time by 12%",
+            skills: "CNC lathe, G-code, Precision measurement" },
+          { id: uid(), title: "Technical Office Intern", org: "Bianchi Impianti", place: "Bergamo", start: "Feb 2025", end: "Feb 2025",
+            bullets: "Drew 15 component drawings in SolidWorks following ISO standards\nUpdated the bill of materials for a conveyor belt project",
+            skills: "SolidWorks, Technical drawing" }
+        ]},
+        { id: uid(), kind: "entries", title: "Projects", items: [
+          { id: uid(), title: "Robotic arm (school project)", org: "ITIS – team of 4", place: "", start: "2024", end: "2025",
+            bullets: "Designed the gripper in Fusion 360 and 3D-printed 6 prototypes in PLA\nPresented the project at the school open day to 200+ visitors",
+            skills: "Fusion 360, 3D printing, Teamwork" }
+        ]},
+        { id: uid(), kind: "entries", title: "Education", items: [
+          { id: uid(), title: "Diploma in Mechanics, Mechatronics and Energy", org: "ITIS \"G. Esempio\"", place: "Bergamo", start: "2021", end: "2026", bullets: "Expected grade: 85/100", skills: "" }
+        ]},
+        { id: uid(), kind: "skills", title: "Skills", lines: "Technical: CNC lathe, G-code, SolidWorks, Fusion 360, Technical drawing, Precision measurement, 3D printing, AutoCAD\nSoft skills: Teamwork, Problem solving" },
+        { id: uid(), kind: "list", title: "Languages", lines: "Italian – native\nEnglish – B2 (school certificate)" }
+      ]
+    },
+    grafica: {
+      example: true,
+      meta: { style: "grafico", accent: "#8a3b12", lang: "en" },
+      header: { name: "Giulia Esempio", headline: "Junior Graphic Designer – Branding & Print", email: "giulia.esempio@email.it", phone: "+39 333 000 0000", city: "Milan, Italy", links: "behance.net/giulia-esempio" },
+      sections: [
+        { id: uid(), kind: "text", title: "Profile", text: "Graphic design student who loves clean layouts and print. I have designed brand identities and social campaigns for two local businesses during my internships. Looking for a junior role in a design studio or agency." },
+        { id: uid(), kind: "entries", title: "Internships (PCTO)", items: [
+          { id: uid(), title: "Graphic Design Intern", org: "Studio Esempio Comunicazione", place: "Milan", start: "May 2025", end: "Jun 2025",
+            bullets: "Designed a new logo and brand guidelines for a local bakery with Illustrator\nLaid out a 24-page product catalogue in InDesign, ready for offset printing\nCreated 30 Instagram posts in Photoshop; the account gained 18% more followers in a month",
+            skills: "Illustrator, Branding, InDesign, Photoshop, Social media" }
+        ]},
+        { id: uid(), kind: "entries", title: "Projects", items: [
+          { id: uid(), title: "Poster series for the school theatre", org: "School project", place: "", start: "2025", end: "",
+            bullets: "Illustrated and printed 5 posters in screen printing, 150 copies each",
+            skills: "Illustration, Screen printing" }
+        ]},
+        { id: uid(), kind: "entries", title: "Education", items: [
+          { id: uid(), title: "Diploma in Graphics and Communication", org: "IIS \"Esempio\"", place: "Milan", start: "2021", end: "2026", bullets: "", skills: "" }
+        ]},
+        { id: uid(), kind: "skills", title: "Skills", lines: "Software: Illustrator, InDesign, Photoshop, Figma\nDesign: Branding, Illustration, Screen printing, Typography\nSoft skills: Social media, Time management" },
+        { id: uid(), kind: "list", title: "Languages", lines: "Italian – native\nEnglish – B1" }
+      ]
+    }
+  };
+
+  const blankCV = () => ({
+    example: false,
+    meta: { style: "tecnico", accent: ACCENTS[0], lang: "en" },
+    header: { name: "", headline: "", email: "", phone: "", city: "", links: "" },
+    sections: [
+      newSection("text", "Profile"),
+      newSection("entries", "Work Experience"),
+      newSection("entries", "Education"),
+      newSection("skills", "Skills"),
+      newSection("list", "Languages")
+    ]
+  });
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const freshIds = cv => { cv.sections.forEach(s => { s.id = uid(); (s.items || []).forEach(i => i.id = uid()); }); return cv; };
+
+  /* ---------- stato ---------- */
+  let cv;
+  try { const raw = localStorage.getItem(STORE_KEY); if (raw) cv = JSON.parse(raw); } catch (e) {}
+  if (!cv || !cv.sections) cv = freshIds(clone(EXAMPLES.meccanica));
+
+  let saveTimer;
+  const persist = () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(cv)); } catch (e) {} }, 300);
+  };
+
+  /* ---------- analisi: skill collegate alle esperienze ---------- */
+  const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+  const splitList = s => String(s || "").split(/[,;]/).map(x => x.trim()).filter(Boolean);
+  const parseSkillLine = line => {
+    const i = line.indexOf(":");
+    return i > -1 ? { label: line.slice(0, i).trim(), skills: splitList(line.slice(i + 1)) } : { label: "", skills: splitList(line) };
+  };
+  const lines = s => String(s || "").split("\n").map(x => x.replace(/^\s*[-•*]\s*/, "").trim()).filter(Boolean);
+
+  const ACTION_VERBS = ("achieved analysed analyzed assembled assisted built calibrated checked coached collaborated completed configured coordinated created cut delivered designed developed drafted drew edited fixed handled helped illustrated improved increased inspected installed laid launched led machined maintained managed measured modelled modeled monitored operated optimised optimized organised organized photographed planned prepared presented printed produced programmed prototyped ran redesigned reduced repaired retouched rewrote set solved supported taught tested trained updated welded won wrote " +
+    "aggiornato analizzato assemblato calibrato collaborato completato configurato controllato coordinato creato curato disegnato fotografato gestito illustrato impaginato installato lavorato manutenuto migliorato misurato modellato montato organizzato ottimizzato pianificato preparato presentato prodotto programmato progettato realizzato ridotto riparato saldato scritto sviluppato stampato testato verificato vinto").split(" ");
+
+  function experienceEntries() {
+    const out = [];
+    cv.sections.forEach(s => { if (s.kind === "entries") (s.items || []).forEach(it => out.push({ sec: s, it })); });
+    return out;
+  }
+  function skillLinks() {
+    const exps = experienceEntries().map(({ it }) => ({
+      label: it.title || it.org || "esperienza senza titolo",
+      tags: splitList(it.skills).map(norm),
+      text: norm([it.title, it.bullets].join(" "))
+    }));
+    const res = [];
+    cv.sections.forEach(s => {
+      if (s.kind !== "skills") return;
+      lines(s.lines).forEach(l => parseSkillLine(l).skills.forEach(sk => {
+        const n = norm(sk);
+        if (!n) return;
+        const where = exps.filter(e => e.tags.includes(n) || (n.length > 2 && e.text.includes(n))).map(e => e.label);
+        res.push({ skill: sk, where });
+      }));
+    });
+    return res;
+  }
+  function analyse() {
+    const h = cv.header;
+    const checks = [];
+    const add = (state, text, note) => checks.push({ state, text, note });
+    const words = document.getElementById("sheet").textContent.split(/\s+/).filter(Boolean).length;
+
+    add(h.name.trim() ? "ok" : "bad", "Nome e cognome in alto", h.name.trim() ? "" : "È la prima cosa che un selezionatore cerca.");
+    add(h.headline.trim() ? "ok" : "warn", "Titolo professionale sotto il nome", h.headline.trim() ? "" : "Es. “Junior CNC Operator” o “Junior Graphic Designer”: aiuta l'ATS a capire il ruolo.");
+    const contacts = [h.email, h.phone].filter(x => x.trim()).length;
+    add(contacts === 2 ? "ok" : "bad", "Email e telefono presenti", contacts === 2 ? "" : "Senza contatti nessuno può chiamarti. Usa un'email seria (nome.cognome).");
+
+    const exps = experienceEntries().filter(({ it }) => it.title.trim() || it.bullets.trim());
+    add(exps.length ? "ok" : "bad", "Almeno un'esperienza o un progetto", exps.length ? `${exps.length} voci trovate` : "Stage, PCTO, progetti scolastici e lavoretti contano tutti.");
+
+    const allBullets = exps.flatMap(({ it }) => lines(it.bullets));
+    if (allBullets.length) {
+      const withNum = allBullets.filter(b => /\d/.test(b)).length;
+      const pctNum = Math.round(withNum / allBullets.length * 100);
+      add(pctNum >= 50 ? "ok" : "warn", `Risultati con numeri: ${withNum} punti su ${allBullets.length}`, pctNum >= 50 ? "" : "Aggiungi quantità, tempi, percentuali, tolleranze: “400 pezzi”, “in 2 settimane”, “+18%”.");
+      const withVerb = allBullets.filter(b => { const w = norm(b).split(" ")[0].replace(/[^a-z]/g, ""); return ACTION_VERBS.some(v => w === v); }).length;
+      add(withVerb / allBullets.length >= .7 ? "ok" : "warn", `Punti che iniziano con un verbo d'azione: ${withVerb} su ${allBullets.length}`, withVerb / allBullets.length >= .7 ? "" : "Inizia ogni punto con un verbo al passato: Designed, Assembled, Created, Reduced…");
+    }
+
+    const links = skillLinks();
+    const linked = links.filter(l => l.where.length).length;
+    if (links.length) {
+      add(linked === links.length ? "ok" : "warn", `Skill dimostrate da un'esperienza: ${linked} su ${links.length}`, linked === links.length ? "" : "Ogni skill deve comparire in un'esperienza reale. Vedi le skill in arancione nella sezione Competenze.");
+    } else {
+      add("warn", "Sezione competenze", "Aggiungi una sezione Competenze con le tue skill principali.");
+    }
+
+    const lenOk = words >= 150 && words <= 650;
+    add(lenOk ? "ok" : "warn", `Lunghezza: circa ${words} parole`, lenOk ? "Bene per un CV di una pagina." : words < 150 ? "Un po' corto: descrivi meglio cosa hai fatto." : "Troppo lungo: per uno studente basta una pagina.");
+
+    const score = Math.round(checks.reduce((a, c) => a + (c.state === "ok" ? 1 : c.state === "warn" ? .5 : 0), 0) / checks.length * 100);
+    return { checks, score, links };
+  }
+
+  /* ---------- rendering editor ---------- */
+  const fld = (label, path, value, opts = {}) => {
+    const id = "f-" + path.replace(/\./g, "-");
+    const tag = opts.area
+      ? `<textarea id="${id}" data-bind="${path}" rows="${opts.rows || 3}" placeholder="${esc(opts.ph || "")}">${esc(value)}</textarea>`
+      : `<input id="${id}" data-bind="${path}" value="${esc(value)}" placeholder="${esc(opts.ph || "")}"${opts.type ? ` type="${opts.type}"` : ""}>`;
+    return `<div class="field"${opts.span ? ' style="grid-column:1/-1"' : ""}><label for="${id}">${label}</label>${tag}${opts.hint ? `<p class="hint">${opts.hint}</p>` : ""}</div>`;
+  };
+
+  function sectionBody(s, si) {
+    const p = `sections.${si}`;
+    if (s.kind === "text") {
+      return fld("Testo", `${p}.text`, s.text, { area: true, rows: 4, ph: "3–4 frasi: chi sei, cosa sai fare, che lavoro cerchi." });
+    }
+    if (s.kind === "list") {
+      return fld("Una voce per riga", `${p}.lines`, s.lines, { area: true, rows: 3, ph: "English – B2\nItalian – native" });
+    }
+    if (s.kind === "skills") {
+      return fld("Una riga per gruppo · formato “Gruppo: skill, skill”", `${p}.lines`, s.lines, { area: true, rows: 3, ph: "Technical: AutoCAD, CNC lathe\nSoft skills: Teamwork" }) +
+        `<div><p class="eyebrow" style="margin:0 0 6px">Collegamento alle esperienze</p><div class="chips" data-skillchips="${s.id}"></div></div>`;
+    }
+    // entries
+    const items = (s.items || []).map((it, ii) => {
+      const q = `${p}.items.${ii}`;
+      return `<div class="entry">
+        <div class="entry-head"><span class="eyebrow">Voce ${ii + 1}</span>
+          <button class="btn ghost small" type="button" data-act="item-up" data-si="${si}" data-ii="${ii}" aria-label="Sposta su">↑</button>
+          <button class="btn ghost small" type="button" data-act="item-down" data-si="${si}" data-ii="${ii}" aria-label="Sposta giù">↓</button>
+          <button class="btn ghost small danger" type="button" data-act="item-del" data-si="${si}" data-ii="${ii}">Elimina</button>
+        </div>
+        <div class="grid2">
+          ${fld("Ruolo / titolo", `${q}.title`, it.title, { ph: "CNC Operator Intern" })}
+          ${fld("Azienda / scuola", `${q}.org`, it.org, { ph: "Officine Rossi S.r.l." })}
+          ${fld("Luogo", `${q}.place`, it.place, { ph: "Bergamo" })}
+          <div class="grid2">${fld("Inizio", `${q}.start`, it.start, { ph: "Jun 2025" })}${fld("Fine", `${q}.end`, it.end, { ph: "Present" })}</div>
+          ${fld("Cosa hai fatto · un punto per riga", `${q}.bullets`, it.bullets, { area: true, rows: 4, span: true, ph: "Verbo d'azione + cosa + risultato con un numero\nAssembled 40 gearboxes per week with zero defects", hint: "Formula: <b>verbo</b> + <b>attività</b> + <b>strumento/skill</b> + <b>risultato misurabile</b>." })}
+          ${fld("Skill usate in questa esperienza", `${q}.skills`, it.skills, { span: true, ph: "SolidWorks, Precision measurement, Teamwork", hint: "Separate da virgole. Devono essere le stesse parole della sezione Competenze." })}
+        </div>
+      </div>`;
+    }).join("");
+    return items + `<div><button class="btn small" type="button" data-act="item-add" data-si="${si}">+ Aggiungi voce</button></div>`;
+  }
+
+  function renderEditor() {
+    const h = cv.header;
+    const ed = $("#editor");
+    const presetBtns = PRESETS.map((p, i) => `<button class="btn" type="button" data-act="sec-add" data-preset="${i}">+ ${esc(cv.meta.lang === "it" ? p.it : p.en)}</button>`).join("");
+    ed.innerHTML = `
+      ${cv.example ? `<div class="example-flag">Questo è un <b>CV di esempio</b> con dati inventati. Modificalo pure, oppure premi <b>Nuovo CV</b> per partire da zero.</div>` : ""}
+
+      <div class="panel" id="panel-checks">
+        <header><h2>Controllo CV · ATS e selezionatori</h2><span class="eyebrow">si aggiorna mentre scrivi</span></header>
+        <div class="body">
+          <div class="score"><div class="meter"><i id="meter-fill"></i></div><b id="score-num"></b></div>
+          <ul class="checks" id="checks"></ul>
+          <details class="tips"><summary>Regole d'oro per superare ATS e persone</summary>
+            <ul>
+              <li>Una sola colonna, titoli di sezione standard (Experience, Education, Skills): l'ATS li riconosce.</li>
+              <li>Niente foto, grafici, tabelle o testo dentro immagini: l'ATS non li legge.</li>
+              <li>Usa le parole chiave dell'annuncio, ma solo se sono vere e dimostrate.</li>
+              <li>Ogni skill va collegata a un'esperienza reale: “dove l'ho usata? con che risultato?”.</li>
+              <li>Ogni punto: verbo d'azione + cosa hai fatto + risultato con un numero.</li>
+              <li>Una pagina, file PDF, nome file chiaro: <i>Nome-Cognome-CV.pdf</i>.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <div class="panel">
+        <header><h2>Aspetto</h2></header>
+        <div class="body">
+          <div class="style-row">
+            <span class="eyebrow">Stile</span>
+            <div class="seg" role="group" aria-label="Stile del CV">
+              ${["tecnico", "grafico", "classico"].map(st => `<button type="button" data-act="style" data-style="${st}" aria-pressed="${cv.meta.style === st}">${st[0].toUpperCase() + st.slice(1)}</button>`).join("")}
+            </div>
+          </div>
+          <div class="style-row">
+            <span class="eyebrow">Colore</span>
+            ${ACCENTS.map(c => `<button type="button" class="swatch" style="background:${c}" data-act="accent" data-color="${c}" aria-pressed="${cv.meta.accent === c}" aria-label="Colore ${c}"></button>`).join("")}
+          </div>
+          <div class="style-row">
+            <span class="eyebrow">Lingua dei titoli suggeriti</span>
+            <div class="seg" role="group" aria-label="Lingua">
+              <button type="button" data-act="lang" data-lang="en" aria-pressed="${cv.meta.lang === "en"}">English</button>
+              <button type="button" data-act="lang" data-lang="it" aria-pressed="${cv.meta.lang === "it"}">Italiano</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <header><h2>Intestazione</h2></header>
+        <div class="body"><div class="grid2">
+          ${fld("Nome e cognome", "header.name", h.name, { ph: "Mario Rossi" })}
+          ${fld("Titolo professionale", "header.headline", h.headline, { ph: "Junior Mechanical Technician" })}
+          ${fld("Email", "header.email", h.email, { ph: "mario.rossi@email.it", type: "email" })}
+          ${fld("Telefono", "header.phone", h.phone, { ph: "+39 333 123 4567", type: "tel" })}
+          ${fld("Città", "header.city", h.city, { ph: "Bergamo, Italy" })}
+          ${fld("LinkedIn / portfolio", "header.links", h.links, { ph: "linkedin.com/in/mario-rossi" })}
+        </div></div>
+      </div>
+
+      ${cv.sections.map((s, si) => `
+        <div class="panel" data-sec="${s.id}">
+          <header>
+            <input class="sec-title" id="sec-title-${s.id}" data-bind="sections.${si}.title" value="${esc(s.title)}" aria-label="Titolo della sezione">
+            <span class="kind">${KINDS[s.kind].label}</span>
+            <button class="btn ghost small" type="button" data-act="sec-up" data-si="${si}" aria-label="Sposta sezione su">↑</button>
+            <button class="btn ghost small" type="button" data-act="sec-down" data-si="${si}" aria-label="Sposta sezione giù">↓</button>
+            <button class="btn ghost small danger" type="button" data-act="sec-del" data-si="${si}">Elimina</button>
+          </header>
+          <div class="body">${sectionBody(s, si)}</div>
+        </div>`).join("")}
+
+      <div class="panel">
+        <header><h2>Aggiungi una sezione</h2></header>
+        <div class="body">
+          <div class="add-row">${presetBtns}</div>
+          <p class="eyebrow" style="margin:4px 0 0">Sezione personalizzata</p>
+          <div class="add-row">
+            ${Object.entries(KINDS).map(([k, v]) => `<button class="btn" type="button" data-act="sec-custom" data-kind="${k}">+ ${v.label}</button>`).join("")}
+          </div>
+          <p class="hint">Paragrafo = testo libero · Esperienze = voci con date e punti · Competenze = skill collegate alle esperienze · Elenco = una voce per riga. Rinomina la sezione cliccando sul titolo.</p>
+        </div>
+      </div>`;
+    refresh();
+  }
+
+  /* ---------- rendering CV ---------- */
+  function renderSheet() {
+    const h = cv.header;
+    const sheet = $("#sheet");
+    sheet.className = "sheet cv-" + cv.meta.style;
+    sheet.style.setProperty("--cv-accent", cv.meta.accent);
+    const contacts = [h.email, h.phone, h.city, h.links].filter(x => x && x.trim()).map(x => `<span>${esc(x)}</span>`).join("");
+    const body = cv.sections.map(s => {
+      let inner = "";
+      if (s.kind === "text") { if (!s.text.trim()) return ""; inner = `<p class="cv-text">${esc(s.text.trim())}</p>`; }
+      if (s.kind === "list") { const ls = lines(s.lines); if (!ls.length) return ""; inner = `<ul class="cv-list">${ls.map(l => `<li>${esc(l)}</li>`).join("")}</ul>`; }
+      if (s.kind === "skills") {
+        const ls = lines(s.lines).map(parseSkillLine).filter(g => g.skills.length);
+        if (!ls.length) return "";
+        inner = ls.map(g => `<p class="cv-skillline">${g.label ? `<b>${esc(g.label)}:</b> ` : ""}${esc(g.skills.join(", "))}</p>`).join("");
+      }
+      if (s.kind === "entries") {
+        const its = (s.items || []).filter(it => it.title.trim() || it.org.trim() || it.bullets.trim());
+        if (!its.length) return "";
+        inner = its.map(it => {
+          const dates = [it.start, it.end].filter(x => x.trim()).join(" – ");
+          const org = [it.org, it.place].filter(x => x.trim()).join(", ");
+          const bl = lines(it.bullets);
+          return `<div class="cv-item">
+            <div class="cv-row"><strong>${esc(it.title)}</strong>${dates ? `<span class="cv-date">${esc(dates)}</span>` : ""}</div>
+            ${org ? `<div class="cv-org">${esc(org)}</div>` : ""}
+            ${bl.length ? `<ul>${bl.map(b => `<li>${esc(b)}</li>`).join("")}</ul>` : ""}
+          </div>`;
+        }).join("");
+      }
+      return `<section class="cv-section"><h2>${esc(s.title)}</h2>${inner}</section>`;
+    }).join("");
+    sheet.innerHTML = `<header class="cv-header">
+        <h1 class="cv-name">${esc(h.name) || "Nome Cognome"}</h1>
+        ${h.headline.trim() ? `<p class="cv-headline">${esc(h.headline)}</p>` : ""}
+        ${contacts ? `<p class="cv-contacts">${contacts}</p>` : ""}
+      </header>${body}`;
+    fitSheet();
+  }
+
+  function fitSheet() {
+    const frame = $("#sheet-frame"), scaler = $("#sheet-scaler"), sheet = $("#sheet");
+    const scale = Math.min(1, frame.clientWidth / sheet.offsetWidth);
+    scaler.style.transform = `scale(${scale})`;
+    frame.style.height = (sheet.offsetHeight * scale) + "px";
+    const pageH = sheet.offsetWidth * 297 / 210;
+    const pages = Math.max(1, Math.ceil((sheet.scrollHeight - 2) / pageH));
+    $("#page-note").textContent = pages > 1 ? `A4 · circa ${pages} pagine — prova a restare in una` : "A4 · 1 pagina";
+  }
+
+  function renderChecks() {
+    const { checks, score, links } = analyse();
+    $("#meter-fill").style.width = score + "%";
+    $("#score-num").textContent = score + "%";
+    const icon = { ok: "✓", warn: "!", bad: "×" };
+    $("#checks").innerHTML = checks.map(c => `<li class="${c.state}"><span class="dot" aria-hidden="true">${icon[c.state]}</span><span>${esc(c.text)}${c.note ? `<small>${esc(c.note)}</small>` : ""}</span></li>`).join("");
+    document.querySelectorAll("[data-skillchips]").forEach(box => {
+      const s = cv.sections.find(x => x.id === box.dataset.skillchips);
+      const mine = new Set(lines(s.lines).flatMap(l => parseSkillLine(l).skills.map(norm)));
+      const list = links.filter(l => mine.has(norm(l.skill)));
+      box.innerHTML = list.length
+        ? list.map(l => l.where.length
+            ? `<span class="chip ok" title="Usata in: ${esc(l.where.join(", "))}">${esc(l.skill)} → ${esc(l.where[0])}${l.where.length > 1 ? ` +${l.where.length - 1}` : ""}</span>`
+            : `<span class="chip warn" title="Aggiungila alle “Skill usate” di un'esperienza o descrivi dove l'hai usata">${esc(l.skill)} · non dimostrata</span>`).join("")
+        : `<span class="hint">Scrivi le tue skill: qui vedrai a quale esperienza è collegata ciascuna.</span>`;
+    });
+  }
+
+  function refresh() { renderSheet(); renderChecks(); persist(); }
+
+  /* ---------- eventi ---------- */
+  const setPath = (path, val) => {
+    const keys = path.split(".");
+    let o = cv;
+    keys.slice(0, -1).forEach(k => { o = o[k]; });
+    o[keys[keys.length - 1]] = val;
+  };
+  let rafId;
+  $("#editor").addEventListener("input", e => {
+    const b = e.target.dataset.bind;
+    if (!b) return;
+    setPath(b, e.target.value);
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(refresh);
+  });
+
+  const move = (arr, i, d) => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; };
+  let pendingDelete = null;
+  $("#editor").addEventListener("click", e => {
+    const btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    const { act } = btn.dataset;
+    const si = +btn.dataset.si, ii = +btn.dataset.ii;
+    switch (act) {
+      case "style": cv.meta.style = btn.dataset.style; break;
+      case "accent": cv.meta.accent = btn.dataset.color; break;
+      case "lang": cv.meta.lang = btn.dataset.lang; break;
+      case "sec-up": move(cv.sections, si, -1); break;
+      case "sec-down": move(cv.sections, si, 1); break;
+      case "sec-del": {
+        const key = "sec:" + cv.sections[si].id;
+        if (pendingDelete !== key) { pendingDelete = key; btn.textContent = "Conferma?"; return; }
+        cv.sections.splice(si, 1); break;
+      }
+      case "sec-add": {
+        const p = PRESETS[+btn.dataset.preset];
+        cv.sections.push(newSection(p.kind, cv.meta.lang === "it" ? p.it : p.en));
+        break;
+      }
+      case "sec-custom": cv.sections.push(newSection(btn.dataset.kind, cv.meta.lang === "it" ? "Nuova sezione" : "New section")); break;
+      case "item-add": cv.sections[si].items.push(blankEntry()); break;
+      case "item-up": move(cv.sections[si].items, ii, -1); break;
+      case "item-down": move(cv.sections[si].items, ii, 1); break;
+      case "item-del": {
+        const key = "item:" + cv.sections[si].items[ii].id;
+        if (pendingDelete !== key) { pendingDelete = key; btn.textContent = "Conferma?"; return; }
+        cv.sections[si].items.splice(ii, 1); break;
+      }
+      default: return;
+    }
+    pendingDelete = null;
+    const y = window.scrollY;
+    renderEditor();
+    if (act === "sec-add" || act === "sec-custom") {
+      const last = cv.sections[cv.sections.length - 1];
+      const el = document.getElementById("sec-title-" + last.id);
+      if (el) { el.scrollIntoView({ block: "center" }); el.select(); }
+    } else window.scrollTo(0, y);
+  });
+
+  /* vista su telefono */
+  document.querySelectorAll(".tabs [data-view]").forEach(b => b.addEventListener("click", () => {
+    document.body.dataset.view = b.dataset.view;
+    document.querySelectorAll(".tabs [data-view]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    if (b.dataset.view === "preview") fitSheet();
+  }));
+  window.addEventListener("resize", fitSheet);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSheet);
+
+  /* ---------- dialog e file ---------- */
+  const dlg = $("#dlg"), dlgBody = $("#dlg-body");
+  const toast = msg => { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2400); };
+  const openDialog = html => { dlgBody.innerHTML = html; dlg.showModal(); };
+  dlg.addEventListener("click", e => { if (e.target.closest("[data-close]") || e.target === dlg) dlg.close(); });
+
+  const fileName = ext => (cv.header.name.trim() || "CV").replace(/\s+/g, "-").replace(/[^\w\-àèéìòù]/gi, "") + "-CV." + ext;
+
+  $("#btn-new").addEventListener("click", () => openDialog(`
+    <h3>Nuovo CV</h3>
+    <p>Da dove vuoi partire? Il CV attuale verrà sostituito: se ti serve, prima usa <b>Salva file</b>.</p>
+    <div class="foot" style="justify-content:flex-start">
+      <button class="btn primary" type="button" data-start="blank">CV vuoto</button>
+      <button class="btn" type="button" data-start="meccanica">Esempio meccanica</button>
+      <button class="btn" type="button" data-start="grafica">Esempio grafica</button>
+    </div>
+    <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button></div>`));
+  dlgBody.addEventListener("click", e => {
+    const b = e.target.closest("[data-start]");
+    if (!b) return;
+    cv = b.dataset.start === "blank" ? blankCV() : freshIds(clone(EXAMPLES[b.dataset.start]));
+    dlg.close(); renderEditor(); window.scrollTo(0, 0);
+  });
+
+  $("#btn-save").addEventListener("click", () => {
+    const json = JSON.stringify(Object.assign({}, cv, { example: false }), null, 2);
+    if (!embedded) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+      a.download = fileName("json");
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast("File salvato: riaprilo con “Apri file” per continuare a modificare.");
+      return;
+    }
+    openDialog(`<h3>Salva il tuo CV</h3>
+      <p>Copia questo testo e incollalo in un documento (es. Google Drive). Per riprendere il lavoro usa <b>Apri file</b> e incollalo.</p>
+      <textarea id="json-out" readonly>${esc(json)}</textarea>
+      <div class="foot"><button class="btn" type="button" data-close>Chiudi</button><button class="btn primary" type="button" id="copy-json">Copia</button></div>`);
+    $("#copy-json").addEventListener("click", () => {
+      const ta = $("#json-out");
+      navigator.clipboard.writeText(ta.value).then(() => toast("Copiato"), () => { ta.focus(); ta.select(); toast("Seleziona e copia con Ctrl+C"); });
+    });
+  });
+
+  const loadJSON = text => {
+    try {
+      const data = JSON.parse(text);
+      if (!data || !Array.isArray(data.sections) || !data.header) throw new Error();
+      data.meta = Object.assign({ style: "tecnico", accent: ACCENTS[0], lang: "en" }, data.meta);
+      cv = data; dlg.open && dlg.close(); renderEditor(); toast("CV caricato");
+    } catch (e) { toast("Questo file non è un CV salvato con CV Lab."); }
+  };
+  $("#btn-open").addEventListener("click", () => openDialog(`
+    <h3>Apri un CV salvato</h3>
+    <p>Scegli il file <b>.json</b> che hai salvato, oppure incolla qui il suo contenuto.</p>
+    <div><button class="btn" type="button" id="pick-file">Scegli file…</button></div>
+    <textarea id="json-in" placeholder='{"header": … }'></textarea>
+    <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="load-json">Carica testo incollato</button></div>`));
+  dlgBody.addEventListener("click", e => {
+    if (e.target.id === "pick-file") $("#file-in").click();
+    if (e.target.id === "load-json") loadJSON($("#json-in").value);
+  });
+  $("#file-in").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => loadJSON(r.result);
+    r.readAsText(f);
+    e.target.value = "";
+  });
+
+  $("#btn-pdf").addEventListener("click", () => {
+    if (embedded) {
+      openDialog(`<h3>Scarica il PDF</h3>
+        <p>In questa anteprima la stampa è bloccata. Apri CV Lab dal link del sito della classe (o dal file <b>index.html</b>) e premi di nuovo <b>Scarica PDF</b>.</p>
+        <div class="foot"><button class="btn primary" type="button" data-close>Ok</button></div>`);
+      return;
+    }
+    const prev = document.title;
+    document.title = fileName("pdf").replace(/\.pdf$/, "");
+    openDialog(`<h3>Scarica il PDF</h3>
+      <p>Nella finestra di stampa scegli <b>Destinazione: Salva come PDF</b>, formato <b>A4</b>, margini <b>Nessuno</b>, e togli la spunta a <b>Intestazioni e piè di pagina</b>.</p>
+      <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="do-print">Apri la stampa</button></div>`);
+    $("#do-print").addEventListener("click", () => { dlg.close(); setTimeout(() => { window.print(); document.title = prev; }, 50); });
+  });
+
+  renderEditor();
+})();
+</script>
+</body>
+</html>
