@@ -20,6 +20,7 @@ Non serve installare niente né creare account: funziona nel browser e salva i d
   - quanti punti iniziano con un verbo d'azione (inglese e italiano);
   - **ogni skill è collegata a un'esperienza reale**: nella sezione Competenze ogni skill appare in verde con l'esperienza in cui è stata usata, oppure in arancione “non dimostrata”;
   - lunghezza (una pagina).
+- **Copia per le Note**: copia tutto il CV come testo semplice da incollare nelle Note del telefono (o in una mail a se stessi). Il testo si può reincollare in **Apri file** per riprendere il lavoro: basta non modificare le righe che iniziano con `==` e `*`.
 - **Salva file / Apri file**: il CV si salva in un file `.json` da tenere su Drive o chiavetta e da riaprire in seguito. Il lavoro viene anche salvato in automatico nel browser.
 - **Skill collegate**: sotto la sezione Competenze ogni skill è verde (dimostrata) o arancione. Sulle arancioni ci sono due pulsanti: **Dimostrala** (scegli l'esperienza, scrivi una frase che contiene la skill, la frase entra nel CV) e **Toglila**.
 - Due **CV di esempio** (meccanica e grafica) con dati inventati, utili per mostrare in classe la formula giusta.

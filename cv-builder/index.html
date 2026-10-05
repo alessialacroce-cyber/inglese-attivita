@@ -260,6 +260,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   <div class="brand"><b>CV Lab</b><span>CV builder · classi quinte</span></div>
   <div class="actions">
     <button class="btn" id="btn-new" type="button">Nuovo CV</button>
+    <button class="btn" id="btn-notes" type="button">Copia per le Note</button>
     <button class="btn" id="btn-open" type="button">Apri file</button>
     <button class="btn" id="btn-save" type="button">Salva file</button>
     <button class="btn primary" id="btn-pdf" type="button">Scarica PDF</button>
@@ -839,7 +840,85 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     });
   });
 
+  /* ---------- testo per le Note del telefono (leggibile e ricaricabile) ---------- */
+  const KIND_TAG = { text: "paragrafo", entries: "esperienze", skills: "competenze", list: "elenco" };
+  function cvToText() {
+    const h = cv.header, out = [];
+    out.push(h.name.trim() || "Nome Cognome", h.headline.trim(), [h.email, h.phone, h.city, h.links].map(x => x.trim()).join(" | "));
+    cv.sections.forEach(s => {
+      out.push("", `== ${s.title} [${KIND_TAG[s.kind]}] ==`);
+      if (s.kind === "text") out.push(s.text.trim());
+      if (s.kind === "skills" || s.kind === "list") out.push(...lines(s.lines));
+      if (s.kind === "entries") (s.items || []).forEach(it => {
+        const dates = [it.start.trim(), it.end.trim()].filter(Boolean).join(" – ");
+        out.push(`* ${[it.title, it.org, it.place].map(x => x.trim()).join(" | ")} | ${dates}`);
+        lines(it.bullets).forEach(b => out.push("- " + b));
+      });
+    });
+    out.push("", `(CV Lab · stile ${cv.meta.style} · colore ${cv.meta.accent})`);
+    return out.join("\n").replace(/\n{3,}/g, "\n\n");
+  }
+  function textToCv(text) {
+    const rows = text.replace(/\r/g, "").split("\n");
+    const firstSec = rows.findIndex(r => /^==\s.*\[(paragrafo|esperienze|competenze|elenco)\]\s*==\s*$/.test(r.trim()));
+    if (firstSec < 0) return null;
+    const head = rows.slice(0, firstSec).map(r => r.trim()).filter(Boolean);
+    const c = (head[2] || "").split("|").map(x => x.trim());
+    const data = blankCV();
+    data.sections = [];
+    data.header = { name: head[0] || "", headline: head[1] || "", email: c[0] || "", phone: c[1] || "", city: c[2] || "", links: c[3] || "" };
+    const kinds = Object.fromEntries(Object.entries(KIND_TAG).map(([k, v]) => [v, k]));
+    let sec = null;
+    rows.slice(firstSec).forEach(raw => {
+      const r = raw.trim();
+      const m = r.match(/^==\s(.*)\s\[(paragrafo|esperienze|competenze|elenco)\]\s*==$/);
+      if (m) { sec = newSection(kinds[m[2]], m[1].trim()); if (sec.items) sec.items = []; data.sections.push(sec); return; }
+      const meta = r.match(/^\(CV Lab · stile (\w+) · colore (#[0-9a-f]{6})\)$/i);
+      if (meta) { data.meta.style = meta[1]; data.meta.accent = meta[2]; return; }
+      if (!sec || !r) return;
+      if (sec.kind === "text") sec.text = sec.text ? sec.text + "\n" + r : r;
+      else if (sec.kind === "skills" || sec.kind === "list") sec.lines = sec.lines ? sec.lines + "\n" + r : r;
+      else if (r.startsWith("* ")) {
+        const f = r.slice(2).split("|").map(x => x.trim());
+        const d = (f[3] || "").split(/\s[–-]\s/);
+        sec.items.push(Object.assign(blankEntry(), { title: f[0] || "", org: f[1] || "", place: f[2] || "", start: d[0] || "", end: d[1] || "" }));
+      } else {
+        if (!sec.items.length) sec.items.push(blankEntry());
+        const it = sec.items[sec.items.length - 1];
+        const b = r.replace(/^[-•]\s*/, "");
+        it.bullets = it.bullets ? it.bullets + "\n" + b : b;
+      }
+    });
+    data.sections.forEach(x => { if (x.items && !x.items.length) x.items.push(blankEntry()); });
+    return data;
+  }
+
+  $("#btn-notes").addEventListener("click", () => {
+    const text = cvToText();
+    const canShare = !embedded && typeof navigator.share === "function";
+    openDialog(`<h3>Copia il CV nelle Note</h3>
+      <p><b>1.</b> Premi <b>Copia</b>. <b>2.</b> Apri l'app Note del telefono, crea una nota nuova. <b>3.</b> Tieni premuto e scegli <b>Incolla</b>.</p>
+      <p class="hint">Per riprendere a lavorare: copia tutta la nota, poi in CV Lab premi <b>Apri file</b> e incollala. Non cambiare le righe che iniziano con <b>==</b> e <b>*</b>.</p>
+      <textarea id="notes-out" readonly>${esc(text)}</textarea>
+      <div class="foot"><button class="btn ghost" type="button" data-close>Chiudi</button>${canShare ? '<button class="btn" type="button" id="share-notes">Condividi…</button>' : ""}<button class="btn primary" type="button" id="copy-notes">Copia</button></div>`);
+    const ta = $("#notes-out");
+    $("#copy-notes").addEventListener("click", () => {
+      const fallback = () => { ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); toast("Testo selezionato: ora premi Copia sul telefono (o Ctrl+C)"); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => toast("Copiato! Ora incollalo in una nota."), fallback);
+      else fallback();
+    });
+    if (canShare) $("#share-notes").addEventListener("click", () => {
+      navigator.share({ title: (cv.header.name.trim() || "Il mio") + " – CV", text }).catch(() => {});
+    });
+  });
+
   const loadJSON = text => {
+    if (!text.trim().startsWith("{")) {
+      const data = textToCv(text);
+      if (data) { cv = data; dlg.open && dlg.close(); renderEditor(); toast("CV caricato dalla nota"); }
+      else toast("Non riconosco questo testo: incolla tutta la nota copiata da CV Lab.");
+      return;
+    }
     try {
       const data = JSON.parse(text);
       if (!data || !Array.isArray(data.sections) || !data.header) throw new Error();
@@ -849,9 +928,9 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   };
   $("#btn-open").addEventListener("click", () => openDialog(`
     <h3>Apri un CV salvato</h3>
-    <p>Scegli il file <b>.json</b> che hai salvato, oppure incolla qui il suo contenuto.</p>
+    <p>Scegli il file <b>.json</b> che hai salvato, oppure incolla qui il testo (anche quello copiato nelle Note del telefono).</p>
     <div><button class="btn" type="button" id="pick-file">Scegli file…</button></div>
-    <textarea id="json-in" placeholder='{"header": … }'></textarea>
+    <textarea id="json-in" placeholder="Incolla qui la nota o il contenuto del file"></textarea>
     <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="load-json">Carica testo incollato</button></div>`));
   dlgBody.addEventListener("click", e => {
     if (e.target.id === "pick-file") $("#file-in").click();
