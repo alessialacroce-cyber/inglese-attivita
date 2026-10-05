@@ -71,6 +71,13 @@ button, input, textarea, select { font: inherit; color: inherit; }
 }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.btn.done { border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.done-steps { display: flex; flex-direction: column; gap: 12px; }
+.done-step { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
+.done-step.ok { border-color: var(--ok); background: var(--ok-bg); }
+.done-step p { margin: 0; }
+.done-step .row { display: flex; flex-wrap: wrap; gap: 6px; }
 .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
 .btn.ghost:hover { color: var(--fg); }
 .btn.small { padding: 3px 8px; font-size: 13px; }
@@ -264,6 +271,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     <button class="btn" id="btn-open" type="button">Apri file</button>
     <button class="btn" id="btn-save" type="button">Salva file</button>
     <button class="btn primary" id="btn-pdf" type="button">Scarica PDF</button>
+    <button class="btn done" id="btn-done" type="button">Ho finito</button>
   </div>
   <input type="file" id="file-in" accept=".json,application/json" hidden>
 </div>
@@ -924,6 +932,62 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     if (!data.sections.length) data.sections = blankCV().sections;
     return data;
   }
+
+  /* ---------- “Ho finito”: salva il CV e svuota il computer ---------- */
+  $("#btn-done").addEventListener("click", () => {
+    openDialog(`<h3>Hai finito? Due passi prima di lasciare il computer</h3>
+      <div class="done-steps">
+        <div class="done-step" id="done-1">
+          <p><b>1. Porta via il tuo CV.</b> Scegli uno dei due modi:</p>
+          <div class="row">
+            <button class="btn primary" type="button" id="done-copy">Copia per le Note</button>
+            <button class="btn" type="button" id="done-save">Salva file</button>
+          </div>
+          <p class="hint" id="done-1-msg">Con “Copia per le Note” incolli il testo in una nota del telefono o in una mail a te stesso.</p>
+          <textarea id="done-text" readonly hidden></textarea>
+        </div>
+        <div class="done-step" id="done-2">
+          <p><b>2. Svuota questo computer</b>, così il prossimo studente non vede il tuo CV.</p>
+          <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="done-check"> Ho salvato il mio CV</label>
+          <div class="row"><button class="btn danger" type="button" id="done-clear" disabled>Svuota e chiudi</button></div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn ghost" type="button" data-close>Torna al CV</button></div>`);
+    const text = cvToText();
+    const step1 = $("#done-1"), msg = $("#done-1-msg"), check = $("#done-check"), clear = $("#done-clear");
+    const markSaved = note => { step1.classList.add("ok"); msg.textContent = note; };
+    $("#done-copy").addEventListener("click", () => {
+      const ta = $("#done-text");
+      const fallback = () => { ta.value = text; ta.hidden = false; ta.focus(); ta.select(); msg.textContent = "Il testo è selezionato qui sotto: copialo (tieni premuto → Copia, o Ctrl+C), poi incollalo in una nota."; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => markSaved("✓ Copiato! Ora apri le Note del telefono e incollalo, poi spunta la casella qui sotto."), fallback);
+      else fallback();
+    });
+    $("#done-save").addEventListener("click", async () => {
+      const json = JSON.stringify(Object.assign({}, cv, { example: false }), null, 2);
+      if (!embedded) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+        a.download = fileName("json");
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        markSaved("✓ File scaricato. Controlla che sia nella cartella Download, poi spunta la casella qui sotto.");
+        return;
+      }
+      const downloads = await downloadsReady;
+      if (!downloads) { msg.textContent = "Qui il file non si può scaricare: usa “Copia per le Note”."; return; }
+      try { await downloads.save({ filename: fileName("json"), data: json }); markSaved("✓ File salvato. Ora spunta la casella qui sotto."); }
+      catch (err) { msg.textContent = err && err.code === "declined" ? "Salvataggio annullato. Riprova o usa “Copia per le Note”." : "Il file non si può salvare qui: usa “Copia per le Note”."; }
+    });
+    check.addEventListener("change", () => { clear.disabled = !check.checked; });
+    clear.addEventListener("click", () => {
+      cv = blankCV();
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+      dlg.close();
+      renderEditor();
+      window.scrollTo(0, 0);
+      toast("Computer svuotato. Buon lavoro!");
+    });
+  });
 
   $("#btn-notes").addEventListener("click", () => {
     const text = cvToText();
