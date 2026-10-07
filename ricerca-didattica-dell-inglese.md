@@ -3,7 +3,7 @@
 Appunti per il sito personale di attività di lingua inglese.
 Due sezioni: **studenti** (lavoro a casa) e **docente** (attività da svolgere in classe).
 
-Ultimo aggiornamento: 25 settembre 2026
+Ultimo aggiornamento: 7 ottobre 2026
 
 ---
 
@@ -19,7 +19,7 @@ Da realizzare una alla volta. Nessuna usa l'intelligenza artificiale.
 | 4 | Dictogloss: ascolta, annota, ricostruisci | Docente (classe) | Il computer legge un breve testo due volte, i gruppi lo ricostruiscono, la pagina evidenzia le differenze con l'originale. |
 | 5 | Il 4-3-2: parlare sempre più sciolti | Docente (classe) | Cronometro guidato: la stessa storia raccontata a tre compagni in 4, 3 e 2 minuti. |
 | 6 | Il termometro del testo | Docente | Si incolla un testo: la pagina calcola quante parole una classe dovrebbe conoscere e colora quelle difficili. Elenco di parole libero: *New General Service List*. |
-| 7 | La giornata di qualcun altro | Docente (classe) | Mappa del mondo con estrazione casuale: ogni studente riceve un personaggio e ne racconta la routine, prima per iscritto poi a voce. Versione impegnativa, per classi B1+/B2. Progetto nella sezione 7. |
+| 7 | La giornata di qualcun altro | Docente (classe) | Mappa del mondo con estrazione casuale: ogni studente riceve un personaggio adulto (semplice o difficile) e ne racconta la routine, prima per iscritto poi a voce. Versione impegnativa, B1–B2. **Prima bozza della pagina pronta** (sezione 7). |
 
 ### Perché funzionano (principi generali)
 
@@ -194,11 +194,11 @@ Criteri:
 
 ---
 
-## 7. Attività 7: la giornata di qualcun altro (proposta)
+## 7. Attività 7: la giornata di qualcun altro
 
-**Dove sta:** sezione docente. Si proietta sulla LIM; ogni studente viene alla lavagna (o il docente estrae per lui).
+**Dove sta:** sezione docente, `docente/la-giornata-di-qualcun-altro/`. Si apre `index.html` nel browser e si proietta sulla LIM; funziona anche senza internet.
 
-**L'idea in una riga:** la routine non è più "la mia giornata" ma quella di una persona **con un lavoro, un luogo e dei vincoli precisi** (fuso orario, clima, turni, distanze). Il personaggio costringe a usare lingua che "mi alzo / vado a scuola" non richiede.
+**L'idea in una riga:** la routine non è più "la mia giornata" ma quella di un **adulto con un lavoro, un luogo e dei vincoli precisi** (fuso orario, clima, turni, distanze). Il personaggio costringe a usare lingua che "mi alzo / vado a scuola" non richiede.
 
 ### Perché è più difficile della solita routine
 
@@ -208,71 +208,63 @@ Criteri:
 | **Abituale contro temporaneo** | *I usually work days, but this month I'm working nights* (presente semplice contro progressivo). |
 | **Passato e cambiamento** | *I used to... / I'm still getting used to... / Back then I would...* |
 | **Imprevisto (seconda estrazione)** | La routine si rompe: racconto al passato o previsioni al futuro. |
-| **Parole vietate** | Niente *get up, go, then, after that, every day, nice, very, like*: obbliga a cercare alternative (*head off, as soon as, by the time, once*). |
+| **Parole vietate** | Niente *get up, go, then, after that, every day, nice, very, like, good*: obbliga a cercare alternative (*head off, as soon as, by the time, once*). |
 | **Il compagno non sa chi sei** | All'orale non si dicono paese e lavoro: il compagno deve indovinarli dagli indizi e fare domande vere. |
 
-### Svolgimento (due lezioni, oppure una da 60 minuti)
+### Svolgimento
 
-1. **Estrazione (5 min).** Si gira la mappa: compare il personaggio con **3 fatti reali** sul luogo e un'immagine semplice. Sulla mappa anche **l'ora locale adesso**: *"In Italia sono le 10:15: cosa sta facendo in questo momento?"*. Nessun personaggio esce due volte nella stessa classe.
-2. **Scrittura sul quaderno (20 min, 150–180 parole), in prima persona.** Si spunta una lista di "missioni" secondo il livello scelto (sotto). Si vede l'elenco delle parole vietate.
-3. **Dal testo agli appunti (2 min).** Si chiude il quaderno e si tengono **solo 5 parole chiave** su un foglietto. All'orale non si legge.
-4. **Orale a coppie, "Who am I?" (3 min per parlare + 2 per le domande).** A racconta senza dire paese né lavoro. B prende appunti e alla fine fa **3 domande** e prova a indovinare. A ha inserito **un dettaglio falso**: B deve trovarlo.
-5. **Cambio compagno, stesso personaggio** (collegamento con il 4-3-2: ripetere lo stesso argomento migliora la scioltezza, De Jong & Perfetti 2011). Due o tre giri.
-6. **Confronto finale (5 min).** L'ultima coppia trova 3 differenze tra le due giornate: *whereas, while, unlike me, both of us...*
-7. **Imprevisto (facoltativo, anche la lezione dopo).** Seconda estrazione: *"Today something went wrong..."* Racconto al passato al nuovo compagno.
+1. **Estrazione (5 min).** Si preme *Gira*: lo spillo salta sulla mappa e si ferma su un personaggio. La scheda mostra chi è, dove, **3 fatti reali**, parole utili e **l'ora locale in questo momento** (*"What is Julien doing right now?"*). Nessun personaggio esce due volte nella stessa classe. Lo studente copia nome e luogo sul quaderno.
+2. **Scrittura sul quaderno (20 min, 150–180 parole), in prima persona**, seguendo le missioni del livello scelto e senza le parole vietate.
+3. **Dal testo agli appunti (2 min).** Si chiude il quaderno e si tengono **solo 5 parole chiave**. All'orale non si legge.
+4. **Orale a coppie, "Who am I?" (3 min per parlare + 2 per le domande).** A racconta senza dire paese né lavoro. B prende appunti, fa **3 domande** e prova a indovinare.
+5. **Cambio compagno, stesso personaggio**, due o tre giri (come nel 4-3-2: ripetere lo stesso argomento migliora la scioltezza, De Jong & Perfetti 2011).
+6. **Confronto finale (5 min).** L'ultima coppia trova 3 differenze tra le due giornate: *whereas, while, unlike, both of us...*
+7. **Imprevisto (facoltativo).** Si preme *Imprevisto*: *"Today something is different..."*. Racconto al passato o al futuro a un nuovo compagno.
 
-### Tre livelli di missioni (lo studente o il docente sceglie)
+**Durata: la pagina va bene in entrambi i casi.**
+
+| Una lezione (60 min) | Due lezioni (30–40 min ciascuna) |
+|---|---|
+| Passi 1–6 di seguito, imprevisto solo se avanza tempo. | **Prima:** passi 1–2 (estrazione e scrittura, finita a casa se serve). **Seconda:** passi 3–7. Rivedere a distanza di giorni aiuta a non "recitare a memoria" (Suzuki & Hanzawa 2022). La pagina ricorda i personaggi già usciti e riapre l'ultima scheda. |
+
+### Personaggi semplici e difficili
+
+Tutti **adulti**, con lavori e situazioni realmente esistenti. Niente cartoline e niente stereotipi.
+
+- **Semplici (16):** routine regolare e lessico quotidiano. Per esempio un'infermiera che va al lavoro in bici a Utrecht, un panettiere a Lione, un autista di autobus a Londra, un *dabbawala* a Mumbai.
+- **Difficili (15):** turni, stagioni, isolamento, lessico tecnico. Per esempio un'ingegnera al radiotelescopio nel deserto di Atacama, un camionista sulle strade di ghiaccio in Canada, il cuoco della base italo-francese Concordia in Antartide, un'astronauta sulla Stazione Spaziale.
+
+Il docente sceglie in alto **Semplici**, **Difficili** o **Tutti**. Per esempio: difficili ai più forti, semplici agli altri, cambiando gruppo prima di ogni estrazione.
+
+**I fatti sono una prima bozza da controllare** prima dell'uso in classe.
+
+### Tre livelli di missioni
+
+Si sceglie in alto: **Base**, **Avanzato** o **Sfida**. Ogni livello comprende i precedenti. Il livello e il gruppo di personaggi sono indipendenti: un personaggio semplice con missioni Sfida è già impegnativo.
 
 | Livello | Missioni |
 |---|---|
-| **Base (B1)** | Avverbi di frequenza vari (*hardly ever, now and then*); 4 congiunzioni di tempo (*as soon as, before -ing, while, until*); dire quanto dura qualcosa (*It takes me... to...*); una cosa che piace e una che no, con il perché. |
-| **Avanzato (B1+/B2)** | Tutto il base, più: abituale contro temporaneo; *be used to / get used to*; almeno 2 frasi passive (*The boxes are collected at...*); un'ipotesi (*If the road is closed, I...*). |
-| **Sfida (per chi parte da 9)** | Tutto l'avanzato, più: com'era la routine **20 anni fa** (*used to / would*); un'opinione argomentata sul proprio lavoro; **cambio di registro**: il testo diventa un'intervista per un podcast o una pagina di diario, e all'orale si risponde alle domande "dell'intervistatore" senza preparazione. |
+| **Base (B1)** | Avverbi di frequenza vari; congiunzioni di tempo (*as soon as, before -ing, while, until*); *It takes me... to...*; una cosa che piace e una che no, con il perché. |
+| **Avanzato (B1+/B2)** | Abituale contro temporaneo; *be used to / get used to*; almeno 2 passivi; un'ipotesi (*If the weather is bad, I...*). |
+| **Sfida (per chi parte da 9)** | Confronto con 20 anni fa (*used to / would*); un'opinione con due ragioni; il testo diventa un'intervista per un podcast o una pagina di diario, e all'orale si risponde a domande a sorpresa. |
 
-### Personaggi (prima bozza, da controllare)
+### I file
 
-Regola: **niente cartoline e niente stereotipi**. Ogni personaggio ha almeno un dettaglio che rompe il cliché, e i fatti sul luogo vanno verificati prima di metterli nel file. Lavori e situazioni realmente esistenti, non "il giapponese che mangia sushi".
+| File | Cosa contiene |
+|---|---|
+| `index.html` | La pagina. |
+| `contenuti.js` | **Personaggi, imprevisti, missioni e parole vietate**, in testo semplice: si modifica senza saper programmare (le istruzioni sono in cima al file). |
+| `mappa.js` | Contorni dei paesi (dati Natural Earth, pubblico dominio). Non si tocca. |
 
-| Personaggio | Dove | Vincolo che rende interessante la routine |
-|---|---|---|
-| Studentessa di 17 anni | Seoul, Corea del Sud | Dopo la scuola le lezioni private serali (*hagwon*) fino a tardi. Confronto diretto con la vita dei nostri studenti. |
-| *Dabbawala* (consegna pranzi) | Mumbai, India | Migliaia di contenitori del pranzo consegnati ogni giorno in treno e bicicletta, con un codice di colori e simboli. |
-| Allenatore e atleti di corsa | Iten, Kenya | Allenamenti all'alba in altura, a circa 2.400 metri. |
-| Tecnico di un osservatorio astronomico | Deserto di Atacama, Cile | Lavoro di notte e a turni di più giorni, ad alta quota. |
-| Camionista delle strade di ghiaccio | Territori del Nord-Ovest, Canada | La strada esiste solo poche settimane all'anno, sui laghi ghiacciati. |
-| Pastore nomade con pannello solare | Mongolia | Si sposta con la famiglia e gli animali; smartphone ricaricato al sole. |
-| Insegnante di una *School of the Air* | Outback, Australia | Fa lezione online ad allievi che vivono a centinaia di chilometri. |
-| Ricercatrice durante la notte polare | Svalbard, Norvegia | Da fine ottobre a metà febbraio il sole non sorge. |
-| Cuoco di un *hawker centre* | Singapore | Cucina di strada riconosciuta dall'UNESCO; si comincia a preparare prima dell'alba. |
-| Sviluppatrice di app in una start-up | Lagos, Nigeria | Ore di traffico per spostarsi; lavora in parte da casa. |
-| Guida di montagna | Valle del Khumbu, Nepal | La routine cambia completamente tra stagione delle spedizioni e resto dell'anno. |
-| Studente durante il Ramadan | Marocco | Pasto prima dell'alba e cena al tramonto: orari della giornata spostati per un mese. |
-| Maestro di una scuola sul fiume | Amazzonia, Brasile | I bambini arrivano in barca; d'estate e d'inverno il livello dell'acqua cambia i percorsi. |
-| Pendolare in bicicletta | Paesi Bassi | Più biciclette che abitanti; 20 km al giorno anche con pioggia e vento. |
+La pagina non chiede nomi, non registra, non manda niente a nessuno e non usa l'intelligenza artificiale. Ricorda solo, nel browser del docente, i personaggi già usciti (si azzera con *Ricomincia la classe*).
 
-Servono almeno **25–30 personaggi** per una classe intera senza ripetizioni: questa è metà lista.
+### Decisioni prese (7 ottobre 2026)
 
-### Imprevisti (seconda estrazione, prima bozza)
-
-- *A power cut lasts all day.*
-- *A journalist follows you for the whole day.*
-- *You have to train a new colleague who knows nothing.*
-- *It's 20 years ago: tell the same day as it was then.*
-- *A huge storm / festival / national holiday changes everything.*
-- *You have just moved here from Italy: what are you still not used to?*
-
-### La pagina (cosa farà)
-
-- Mappa del mondo disegnata nella pagina (niente mappe online): un segnaposto "salta" tra i paesi e si ferma su uno.
-- Scheda del personaggio grande e leggibile dalla LIM: chi è, dove, 3 fatti, ora locale in questo momento.
-- Pulsanti: **Gira**, **Imprevisto**, **Ricomincia la classe** (azzera i personaggi già usciti).
-- Selettore del livello: mostra le missioni e le parole vietate corrispondenti.
-- Personaggi e imprevisti in un **file di testo semplice**, modificabile senza saper programmare (come gli argomenti del 4-3-2).
-- Non chiede nomi, non registra, non manda niente a nessuno, non usa l'intelligenza artificiale.
+- Personaggi divisi tra **semplici** e **difficili**, tutti **adulti**.
+- **Niente dettaglio falso** all'orale.
+- Durata: lasciata libera, la pagina funziona sia in una lezione sia in due.
 
 ### Da decidere
 
-1. Il livello lo sceglie **lo studente** (e si mette in gioco) o **il docente** (per differenziare)?
-2. Il **dettaglio falso** all'orale: lo teniamo o complica troppo?
-3. Una lezione da 60 minuti o due da 30–40, con l'imprevisto la volta dopo?
-4. Personaggi: va bene questo tipo, o li vogliamo più vicini all'età degli studenti (più ragazzi di 16–19 anni)?
+1. Il livello delle missioni lo sceglie **lo studente** o **il docente**?
+2. Controllare i fatti dei personaggi e aggiungerne o toglierne qualcuno.
