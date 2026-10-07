@@ -194,9 +194,9 @@
     <section class="blocco compito">
       <h2>✏️ What to do</h2>
       <ol>
-        <li>You are <strong id="chi-sei"></strong>. In your notebook, write about your day in the first person (<em>I…</em>): 120–150 words. Use "My day" and add details.</li>
+        <li>You are <strong id="chi-sei"></strong>. In your notebook, write about your day in the first person (<em>I…</em>): 120–150 words. Use "My day" and your missions.</li>
         <li>Close your notebook. Keep only 5 key words.</li>
-        <li>Tell your partner about your day. Don't say your job or your country: your partner listens and guesses!</li>
+        <li>Tell your partner about your day. Don't say your job or your country: your partner asks questions and guesses!</li>
       </ol>
     </section>
 
@@ -385,11 +385,13 @@ setInterval(() => {
 // ---------- Missioni e parole vietate ----------
 
 function mostraMissioni() {
-  const ordine = ["base", "avanzato", "sfida"];
-  const nomi = { base: "Base", avanzato: "Avanzato", sfida: "Sfida" };
-  const i = ordine.indexOf(stato.livello);
+  const intro = {
+    base: "In your text, answer these questions:",
+    avanzato: "Answer the Base questions, and these too:",
+    sfida: "Your challenge:"
+  };
   document.getElementById("missioni").innerHTML =
-    (i > 0 ? `<p class="nota">Everything in "${nomi[ordine[i - 1]]}", plus:</p>` : "") +
+    `<p class="nota">${intro[stato.livello]}</p>` +
     `<ul>${lista(DATI.missioni[stato.livello] || [], m => `<li>${escapa(m)}</li>`)}</ul>`;
   document.getElementById("vietate").innerHTML = lista(DATI.vietate, w => `<span>${escapa(w)}</span>`);
 }

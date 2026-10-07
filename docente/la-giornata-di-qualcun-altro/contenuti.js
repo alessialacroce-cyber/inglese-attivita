@@ -609,23 +609,25 @@ giornata: 17:00 Clean and photograph the finds, write notes
 
 === MISSIONI BASE ===
 
-- Use at least 4 different frequency adverbs: hardly ever, now and then, as a rule...
-- Link your actions with: as soon as, before + -ing, while, until.
-- Say how long things take: It takes me... to...
-- Say one thing you love and one thing you can't stand about your day, and explain why.
+- What time do you start and finish work?
+- How do you get to work? How long does it take?
+- What do you usually eat, and when?
+- What do you do in your free time?
+- What do you like about your job? What don't you like?
 
 === MISSIONI AVANZATO ===
 
-- Contrast a habit and a temporary situation: I usually..., but this month I'm...
-- Use "be used to" and "get used to".
-- Use the passive at least twice: The boxes are collected at...
-- Add a condition: If the weather is bad, I...
+- How often do you...? Use always, usually, sometimes, never.
+- Why do you start so early (or so late)?
+- What do you do when something goes wrong?
+- Is your day different in winter, or at the weekend?
 
 === MISSIONI SFIDA ===
 
-- Compare your day today with 20 years ago: used to / would.
-- Give an opinion about your job and support it with two reasons.
-- Write it as a podcast interview or a diary page. When you speak, answer your partner's surprise questions.
+- Write your day with affirmative AND negative sentences: what you do and what you don't do. (I start work at 5. I don't have lunch at home.)
+- Write at least 4 negative sentences, with don't or never.
+- Write 6 questions to discover your partner's character: 3 with "Do you...?" and 3 with What / When / Where / How...?
+- When you speak, ask your questions and guess your partner's job and country.
 
 === PAROLE VIETATE ===
 

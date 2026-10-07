@@ -242,13 +242,13 @@ Il docente sceglie in alto **Semplici**, **Difficili** o **Tutti**. Per esempio:
 
 ### Tre livelli di missioni
 
-Si sceglie in alto: **Base**, **Avanzato** o **Sfida**. Ogni livello comprende i precedenti. Il livello e il gruppo di personaggi sono indipendenti: un personaggio semplice con missioni Sfida è già impegnativo.
+Classe: **biennio**, si sta ripassando il **present simple**. Tutte le missioni restano su questo tempo verbale e sono scritte come **domande**, non come regole di grammatica. Il livello e il gruppo di personaggi sono indipendenti.
 
-| Livello | Missioni |
+| Livello | Cosa fa lo studente |
 |---|---|
-| **Base (B1)** | Avverbi di frequenza vari; congiunzioni di tempo (*as soon as, before -ing, while, until*); *It takes me... to...*; una cosa che piace e una che no, con il perché. |
-| **Avanzato (B1+/B2)** | Abituale contro temporaneo; *be used to / get used to*; almeno 2 passivi; un'ipotesi (*If the weather is bad, I...*). |
-| **Sfida (per chi parte da 9)** | Confronto con 20 anni fa (*used to / would*); un'opinione con due ragioni; il testo diventa un'intervista per un podcast o una pagina di diario, e all'orale si risponde a domande a sorpresa. |
+| **Base** | Risponde nel testo a 5 domande: orari, come va al lavoro e quanto ci mette, cosa mangia, tempo libero, cosa gli piace e cosa no. |
+| **Avanzato** | Le domande Base, più: *How often...?* (*always, usually, sometimes, never*), *Why do you start so early?*, *What do you do when something goes wrong?*, *Is your day different in winter?* |
+| **Sfida** (proposta della docente) | **Fa lui le domande**: ne scrive 6 per scoprire il personaggio del compagno (3 con *Do you...?*, 3 con *What / When / Where / How...?*) e le usa all'orale. Nel testo usa forma **affermativa e negativa** (almeno 4 frasi con *don't* o *never*). Così usa tutte e tre le forme del present simple. |
 
 ### I file
 
