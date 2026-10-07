@@ -112,6 +112,22 @@
   .riga strong { color: var(--testo); }
   .livello { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--tenue); margin-bottom: 6px; }
 
+  /* ---------- La giornata e il compito ---------- */
+  .blocco {
+    background: var(--carta);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  }
+  .blocco h2 { font-size: 1rem; margin: 0 0 8px; }
+  .giornata { list-style: none; margin: 0; padding: 0; }
+  .giornata li { display: flex; gap: 12px; padding: 6px 0; border-top: 1px solid var(--bordo); }
+  .giornata li:first-child { border-top: none; }
+  .giornata time { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--blu); min-width: 3.2em; }
+  .compito ol { margin: 0; padding-left: 1.3em; }
+  .compito li { margin-bottom: 6px; }
+
   /* ---------- Sezioni da aprire ---------- */
   details {
     background: var(--carta);
@@ -169,6 +185,20 @@
   <!-- Dopo l'estrazione -->
   <div id="risultato" hidden>
     <div class="scheda" id="scheda"></div>
+
+    <section class="blocco">
+      <h2>🕒 My day</h2>
+      <ol class="giornata" id="giornata"></ol>
+    </section>
+
+    <section class="blocco compito">
+      <h2>✏️ What to do</h2>
+      <ol>
+        <li>You are <strong id="chi-sei"></strong>. In your notebook, write about your day in the first person (<em>I…</em>): 120–150 words. Use "My day" and add details.</li>
+        <li>Close your notebook. Keep only 5 key words.</li>
+        <li>Tell your partner about your day. Don't say your job or your country: your partner listens and guesses!</li>
+      </ol>
+    </section>
 
     <details>
       <summary>📌 3 facts</summary>
@@ -238,6 +268,10 @@ function leggiContenuti(testo) {
       const valore = riga.slice(pos + 1).trim();
       if (!p) p = { livello, fatti: [], parole: [] };
       if (chiave === "fatto") { if (valore) p.fatti.push(valore); }
+      else if (chiave === "giornata") {
+        const spazio = valore.indexOf(" ");
+        if (spazio > 0) (p.giornata = p.giornata || []).push({ ora: valore.slice(0, spazio), cosa: valore.slice(spazio + 1) });
+      }
       else if (chiave === "parole") p.parole = valore.split(",").map(s => s.trim()).filter(Boolean);
       else if (chiave === "posizione") {
         const [lat, lon] = valore.split(",").map(Number);
@@ -331,6 +365,8 @@ function mostra(p) {
     <p class="lavoro">I'm ${escapa(p.chi || "")}.</p>
     <p class="riga">📍 ${escapa(p.dove || "")}</p>
     <p class="riga" id="ora">${rigaOra(p)}</p>`;
+  document.getElementById("giornata").innerHTML = lista(p.giornata || [], m => `<li><time>${escapa(m.ora)}</time><span>${escapa(m.cosa)}</span></li>`);
+  document.getElementById("chi-sei").textContent = nome;
   document.getElementById("fatti").innerHTML = lista(p.fatti, f => `<li>${escapa(f)}</li>`);
   document.getElementById("parole").innerHTML = lista(p.parole, w => `<span>${escapa(w)}</span>`);
   // riparte con le sezioni chiuse
