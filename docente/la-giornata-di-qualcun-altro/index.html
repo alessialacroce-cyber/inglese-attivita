@@ -3,22 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>La giornata di qualcun altro</title>
+<title>Someone else's day</title>
 <style>
   :root {
     --sfondo: #f6f4ef;
     --carta: #ffffff;
     --testo: #1f2430;
     --tenue: #5b6272;
-    --bordo: #d9d4c7;
+    --bordo: #e2ddd0;
     --mare: #dcebf5;
     --terra: #e9e2d0;
     --confine: #c9bfa6;
     --evidenza: #f08a24;
-    --spillo: #d6332a;
-    --accento: #1f5fa8;
-    --semplice: #2e8b57;
-    --difficile: #b5462f;
+    --rosso: #d6332a;
+    --blu: #1f5fa8;
   }
   * { box-sizing: border-box; }
   body {
@@ -26,170 +24,184 @@
     background: var(--sfondo);
     color: var(--testo);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1.45;
   }
-  header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 24px;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--bordo);
-    background: var(--carta);
-  }
-  h1 { font-size: 1.5rem; margin: 0; margin-right: auto; }
-  .gruppo { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .gruppo > span { color: var(--tenue); font-size: .9rem; margin-right: 4px; }
-  button {
-    font: inherit;
-    border: 1px solid var(--bordo);
-    background: var(--carta);
-    color: var(--testo);
-    padding: 6px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  button:hover { border-color: var(--accento); }
-  button[aria-pressed="true"] { background: var(--accento); border-color: var(--accento); color: #fff; }
-  button.grande {
-    font-size: 1.3rem;
-    font-weight: 700;
-    padding: 12px 28px;
-    background: var(--spillo);
-    border-color: var(--spillo);
-    color: #fff;
-  }
-  button.grande.secondario { background: var(--carta); color: var(--spillo); }
-  button:disabled { opacity: .45; cursor: default; }
+  /* Sulla LIM tutto più grande */
+  @media (min-width: 1100px) { body { font-size: 21px; } }
 
-  main {
-    display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(340px, 2fr);
-    gap: 20px;
-    padding: 20px;
-    max-width: 1700px;
-    margin: 0 auto;
-  }
-  @media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
+  .pagina { max-width: 600px; margin: 0 auto; padding: 14px 16px 40px; }
+  @media (min-width: 1100px) { .pagina { max-width: 760px; } }
 
-  .colonna { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-  .riquadro {
-    background: var(--carta);
-    border: 1px solid var(--bordo);
-    border-radius: 14px;
-    padding: 18px 22px;
-  }
+  h1 { font-size: 1.3rem; margin: 4px 0 12px; text-align: center; }
 
-  #mappa { width: 100%; height: auto; display: block; border-radius: 14px; background: var(--mare); border: 1px solid var(--bordo); }
+  #mappa { width: 100%; height: auto; display: block; border-radius: 14px; background: var(--mare); }
   #mappa path { fill: var(--terra); stroke: var(--confine); stroke-width: .4; transition: fill .2s; }
   #mappa path.acceso { fill: var(--evidenza); }
-  #spillo { transition: transform .18s ease-out; }
-  #spillo circle.alone { fill: var(--spillo); opacity: .25; }
-  #spillo circle.centro { fill: var(--spillo); stroke: #fff; stroke-width: 1.5; }
+  #spillo circle.alone { fill: var(--rosso); opacity: .25; }
+  #spillo circle.centro { fill: var(--rosso); stroke: #fff; stroke-width: 1.5; }
   #spillo.fermo circle.alone { animation: pulsa 1.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
-  @keyframes pulsa { from { transform: scale(.6); opacity: .5; } to { transform: scale(2.2); opacity: 0; } }
+  @keyframes pulsa { from { transform: scale(.6); opacity: .5; } to { transform: scale(2.4); opacity: 0; } }
 
-  .comandi { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-  .contatore { color: var(--tenue); margin-left: auto; }
-
-  #scheda.vuota { color: var(--tenue); text-align: center; padding: 40px 22px; }
-  #scheda.appare { animation: appare .5s ease-out; }
-  @keyframes appare { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  .etichetta {
-    display: inline-block;
-    font-size: .8rem;
+  button {
+    font: inherit;
+    color: var(--testo);
+    background: var(--carta);
+    border: 1px solid var(--bordo);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .scelta { display: flex; gap: 6px; margin: 14px 0 10px; }
+  .scelta button { flex: 1; }
+  .scelta button[aria-pressed="true"] { background: var(--blu); border-color: var(--blu); color: #fff; }
+  .gira {
+    display: block;
+    width: 100%;
+    font-size: 1.35rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    padding: 2px 10px;
-    border-radius: 99px;
+    padding: 14px;
+    background: var(--rosso);
+    border-color: var(--rosso);
     color: #fff;
   }
-  .etichetta.semplici { background: var(--semplice); }
-  .etichetta.difficili { background: var(--difficile); }
-  .nome { font-size: 2.1rem; font-weight: 800; margin: 6px 0 0; line-height: 1.15; }
-  .chi { font-size: 1.3rem; margin: 2px 0 0; }
-  .dove { font-size: 1.15rem; color: var(--accento); font-weight: 600; margin: 4px 0 12px; }
-  .ora {
-    background: var(--sfondo);
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin-bottom: 14px;
+  .gira:disabled { opacity: .5; }
+  .link { background: none; border: none; color: var(--tenue); text-decoration: underline; padding: 6px; }
+
+  /* ---------- Scheda del personaggio ---------- */
+  .scheda {
+    background: var(--carta);
+    border-radius: 18px;
+    padding: 22px 18px 18px;
+    margin-top: 14px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    animation: appare .5s ease-out;
   }
-  .ora strong { font-size: 1.5rem; }
-  .ora .domanda { font-style: italic; margin-top: 2px; }
-  #scheda ul { margin: 0 0 12px; padding-left: 1.2em; }
-  #scheda li { margin-bottom: 6px; }
-  h2 { font-size: 1.05rem; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .04em; color: var(--tenue); }
-  .parole { display: flex; flex-wrap: wrap; gap: 6px; }
-  .parole span { background: var(--mare); border-radius: 6px; padding: 2px 10px; }
+  @keyframes appare { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .avatar {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: #fdf1e3;
+    border: 4px solid var(--evidenza);
+    display: grid;
+    place-items: center;
+    font-size: 66px;
+    line-height: 1;
+  }
+  .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .avatar .simbolo {
+    position: absolute;
+    right: -6px;
+    bottom: -4px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--carta);
+    border: 2px solid var(--bordo);
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+  }
+  .ciao { font-size: 1.7rem; font-weight: 800; margin: 4px 0 2px; line-height: 1.2; }
+  .lavoro { font-size: 1.1rem; margin: 0 0 10px; }
+  .riga { margin: 4px 0; color: var(--tenue); }
+  .riga strong { color: var(--testo); }
+  .livello { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--tenue); margin-bottom: 6px; }
 
-  #imprevisto { border-color: var(--spillo); border-width: 2px; }
-  #imprevisto p { font-size: 1.35rem; font-weight: 600; margin: 0; }
+  /* ---------- Sezioni da aprire ---------- */
+  details {
+    background: var(--carta);
+    border-radius: 14px;
+    margin-top: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  }
+  summary { cursor: pointer; padding: 14px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "＋"; color: var(--tenue); }
+  details[open] summary::after { content: "−"; }
+  .contenuto { padding: 0 16px 16px; }
+  .contenuto ul { margin: 0; padding-left: 1.2em; }
+  .contenuto li { margin-bottom: 6px; }
+  .etichette { display: flex; flex-wrap: wrap; gap: 6px; }
+  .etichette span { background: var(--mare); border-radius: 8px; padding: 3px 10px; }
+  .etichette.vietate span { background: #fbe9e7; text-decoration: line-through; text-decoration-color: var(--rosso); text-decoration-thickness: 2px; }
+  .nota { color: var(--tenue); font-style: italic; margin: 0 0 6px; }
 
-  #missioni ul { margin: 0; padding-left: 1.2em; }
-  #missioni li { margin-bottom: 6px; }
-  #missioni .livello-precedente { color: var(--tenue); font-style: italic; margin: 0 0 6px; }
-  .vietate { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .vietate span { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--spillo); background: #fbe9e7; border-radius: 6px; padding: 2px 10px; }
-
-  details summary { cursor: pointer; color: var(--tenue); }
-  #usciti { margin: 8px 0 0; padding-left: 1.2em; columns: 2; }
+  .imprevisto {
+    background: var(--carta);
+    border: 2px solid var(--rosso);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    animation: appare .4s ease-out;
+  }
+  .imprevisto p { margin: 4px 0 0; font-size: 1.2rem; font-weight: 600; }
+  .azioni { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 16px; }
+  .azioni .secondario { width: 100%; padding: 12px; border: 2px solid var(--rosso); color: var(--rosso); font-weight: 700; }
   [hidden] { display: none !important; }
 </style>
 </head>
 <body>
-
-<header>
+<div class="pagina">
   <h1>🌍 Someone else's day</h1>
-  <div class="gruppo" id="scelta-personaggi">
-    <span>Personaggi</span>
-    <button data-valore="semplici">Semplici</button>
-    <button data-valore="difficili">Difficili</button>
-    <button data-valore="tutti">Tutti</button>
-  </div>
-  <div class="gruppo" id="scelta-missioni">
-    <span>Missioni</span>
-    <button data-valore="base">Base</button>
-    <button data-valore="avanzato">Avanzato</button>
-    <button data-valore="sfida">Sfida</button>
-  </div>
-</header>
 
-<main>
-  <div class="colonna">
-    <svg id="mappa" viewBox="0 20 900 400" role="img" aria-label="Mappa del mondo">
-      <g id="paesi"></g>
-      <g id="spillo" transform="translate(-50,-50)">
-        <circle class="alone" r="9"></circle>
-        <circle class="centro" r="5"></circle>
-      </g>
-    </svg>
+  <svg id="mappa" viewBox="0 20 900 400" role="img" aria-label="Mappa del mondo">
+    <g id="paesi"></g>
+    <g id="spillo" transform="translate(-50,-50)">
+      <circle class="alone" r="10"></circle>
+      <circle class="centro" r="6"></circle>
+    </g>
+  </svg>
 
-    <div class="riquadro comandi">
-      <button class="grande" id="gira">🎲 Gira</button>
-      <button class="grande secondario" id="tira-imprevisto">⚡ Imprevisto</button>
-      <span class="contatore" id="contatore"></span>
+  <!-- Prima dell'estrazione -->
+  <div id="inizio">
+    <div class="scelta" id="scelta-gruppo">
+      <button data-valore="semplici">Semplice</button>
+      <button data-valore="difficili">Difficile</button>
     </div>
-
-    <div class="riquadro" id="missioni"></div>
+    <button class="gira" id="gira">🎲 Gira</button>
   </div>
 
-  <div class="colonna">
-    <div class="riquadro vuota" id="scheda">
-      Premi <strong>Gira</strong> per estrarre un personaggio.
-    </div>
-    <div class="riquadro" id="imprevisto" hidden></div>
-    <div class="riquadro">
-      <details>
-        <summary>Personaggi già usciti e nuova classe</summary>
-        <ol id="usciti"></ol>
-        <p><button id="ricomincia">Ricomincia la classe</button></p>
-      </details>
+  <!-- Dopo l'estrazione -->
+  <div id="risultato" hidden>
+    <div class="scheda" id="scheda"></div>
+
+    <details>
+      <summary>📌 3 facts</summary>
+      <div class="contenuto"><ul id="fatti"></ul></div>
+    </details>
+    <details>
+      <summary>💬 Useful words</summary>
+      <div class="contenuto"><div class="etichette" id="parole"></div></div>
+    </details>
+    <details>
+      <summary>🎯 Your missions</summary>
+      <div class="contenuto">
+        <div class="scelta" id="scelta-livello" style="margin-top:0">
+          <button data-valore="base">Base</button>
+          <button data-valore="avanzato">Avanzato</button>
+          <button data-valore="sfida">Sfida</button>
+        </div>
+        <div id="missioni"></div>
+      </div>
+    </details>
+    <details>
+      <summary>🚫 Banned words</summary>
+      <div class="contenuto"><div class="etichette vietate" id="vietate"></div></div>
+    </details>
+
+    <div class="imprevisto" id="imprevisto" hidden></div>
+
+    <div class="azioni">
+      <button class="secondario" id="tira-imprevisto">⚡ Imprevisto</button>
+      <button class="link" id="di-nuovo">Gira di nuovo</button>
     </div>
   </div>
-</main>
+</div>
 
 <script src="mappa.js"></script>
 <script src="contenuti.js"></script>
@@ -231,6 +243,10 @@ function leggiContenuti(testo) {
         const [lat, lon] = valore.split(",").map(Number);
         p.lat = lat; p.lon = lon;
       }
+      else if (chiave === "icona") {
+        const [persona, simbolo] = valore.split(/\s+/);
+        p.persona = persona || "🙂"; p.simbolo = simbolo || "";
+      }
       else p[chiave] = valore;
     }
     return elenco;
@@ -255,21 +271,20 @@ function leggiContenuti(testo) {
 
 const DATI = leggiContenuti(window.TESTO_CONTENUTI || "");
 
-// ---------- Salvataggi nel browser del docente ----------
+// ---------- Salvataggio sul dispositivo (il personaggio resta anche se si chiude la pagina) ----------
 
-const CHIAVE = "giornata-qualcun-altro";
+const CHIAVE = "giornata-qualcun-altro-v2";
 function carica() {
   try { return JSON.parse(localStorage.getItem(CHIAVE)) || {}; } catch (e) { return {}; }
 }
 function salva() {
   try { localStorage.setItem(CHIAVE, JSON.stringify(stato)); } catch (e) { /* niente salvataggio: pazienza */ }
 }
-const stato = Object.assign({ gruppo: "semplici", livello: "base", usciti: [], ultimo: null }, carica());
+const stato = Object.assign({ gruppo: "semplici", livello: "base", personaggio: null, imprevisto: null }, carica());
 
 // ---------- Mappa ----------
 
 const K = 2.5; // stessa scala usata in mappa.js
-const xy = (lat, lon) => [(lon + 180) * K, (90 - lat) * K];
 const svgNS = "http://www.w3.org/2000/svg";
 const gruppoPaesi = document.getElementById("paesi");
 const pathPerPaese = {};
@@ -284,8 +299,7 @@ const spillo = document.getElementById("spillo");
 function puntaSu(personaggio, fermo) {
   for (const p of gruppoPaesi.querySelectorAll(".acceso")) p.classList.remove("acceso");
   if (personaggio.paese && pathPerPaese[personaggio.paese]) pathPerPaese[personaggio.paese].classList.add("acceso");
-  const [x, y] = xy(personaggio.lat, personaggio.lon);
-  spillo.setAttribute("transform", `translate(${x},${y})`);
+  spillo.setAttribute("transform", `translate(${(personaggio.lon + 180) * K},${(90 - personaggio.lat) * K})`);
   spillo.classList.toggle("fermo", !!fermo);
 }
 
@@ -294,105 +308,43 @@ function puntaSu(personaggio, fermo) {
 function oraIn(fuso) {
   return new Intl.DateTimeFormat("en-GB", { timeZone: fuso, hour: "2-digit", minute: "2-digit" }).format(new Date());
 }
-function minutiDaMezzanotte(fuso) {
-  const parti = new Intl.DateTimeFormat("en-GB", {
-    timeZone: fuso, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric"
-  }).formatToParts(new Date());
-  const v = {};
-  for (const p of parti) v[p.type] = Number(p.value);
-  return Date.UTC(v.year, v.month - 1, v.day, v.hour, v.minute) / 60000;
-}
-function differenzaConItalia(fuso) {
-  const ore = (minutiDaMezzanotte(fuso) - minutiDaMezzanotte("Europe/Rome")) / 60;
-  if (ore === 0) return "stessa ora dell'Italia";
-  const testo = Number.isInteger(ore) ? String(Math.abs(ore)) : Math.abs(ore).toFixed(1).replace(".", ",");
-  return `${ore > 0 ? "+" : "−"}${testo} h rispetto all'Italia`;
-}
-
-// ---------- Scheda del personaggio ----------
-
-const scheda = document.getElementById("scheda");
-
-function escapa(s) {
-  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-}
-function nomeBreve(p) { return p.nome.split(",")[0].trim(); }
-
-function bloccoOra(p) {
+function rigaOra(p) {
   if (!p.fuso) return "";
   try {
-    return `<div class="ora">
-      Local time now: <strong>${oraIn(p.fuso)}</strong>
-      <span style="color:var(--tenue)">· in Italia ${oraIn("Europe/Rome")} (${differenzaConItalia(p.fuso)})</span>
-      <div class="domanda">What is ${escapa(nomeBreve(p))} doing right now?</div>
-    </div>`;
+    return `🕒 It's <strong>${oraIn(p.fuso)}</strong> here now <span>(${oraIn("Europe/Rome")} in Italy)</span>`;
   } catch (e) { return ""; }
 }
 
-function mostraScheda(p) {
-  scheda.classList.remove("vuota", "appare");
-  void scheda.offsetWidth; // fa ripartire l'animazione
-  scheda.classList.add("appare");
-  scheda.innerHTML = `
-    <span class="etichetta ${p.livello}">${p.livello === "semplici" ? "Semplice" : "Difficile"}</span>
-    <p class="nome">${escapa(p.nome)}</p>
-    <p class="chi">${escapa(p.chi || "")}</p>
-    <p class="dove">📍 ${escapa(p.dove || "")}</p>
-    <div id="ora">${bloccoOra(p)}</div>
-    <h2>Facts</h2>
-    <ul>${p.fatti.map(f => `<li>${escapa(f)}</li>`).join("")}</ul>
-    ${p.parole.length ? `<h2>Useful words</h2><div class="parole">${p.parole.map(w => `<span>${escapa(w)}</span>`).join("")}</div>` : ""}`;
+// ---------- Scheda ----------
+
+const escapa = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const trova = nome => DATI.personaggi.find(p => p.nome === nome);
+const lista = (elementi, fn) => elementi.map(fn).join("");
+
+function mostra(p) {
+  const [nome, eta] = p.nome.split(",").map(s => s.trim());
+  const foto = p.foto ? `<img src="foto/${encodeURI(p.foto)}" alt="" onerror="this.replaceWith(document.createTextNode('${p.persona}'))">` : p.persona;
+  document.getElementById("scheda").innerHTML = `
+    <div class="avatar">${foto}${p.simbolo ? `<span class="simbolo">${p.simbolo}</span>` : ""}</div>
+    <span class="livello">${p.livello === "semplici" ? "Semplice" : "Difficile"}</span>
+    <p class="ciao">Hi, I'm ${escapa(nome)}${eta ? `, ${escapa(eta)}` : ""}.</p>
+    <p class="lavoro">I'm ${escapa(p.chi || "")}.</p>
+    <p class="riga">📍 ${escapa(p.dove || "")}</p>
+    <p class="riga" id="ora">${rigaOra(p)}</p>`;
+  document.getElementById("fatti").innerHTML = lista(p.fatti, f => `<li>${escapa(f)}</li>`);
+  document.getElementById("parole").innerHTML = lista(p.parole, w => `<span>${escapa(w)}</span>`);
+  // riparte con le sezioni chiuse
+  for (const d of document.querySelectorAll("#risultato details")) d.open = false;
+  document.getElementById("inizio").hidden = true;
+  document.getElementById("risultato").hidden = false;
+  mostraImprevisto();
 }
 
 setInterval(() => {
-  const p = trova(stato.ultimo);
-  const box = document.getElementById("ora");
-  if (p && box) box.innerHTML = bloccoOra(p);
+  const p = trova(stato.personaggio);
+  const riga = document.getElementById("ora");
+  if (p && riga) riga.innerHTML = rigaOra(p);
 }, 30000);
-
-// ---------- Estrazione ----------
-
-function trova(nome) { return DATI.personaggi.find(p => p.nome === nome); }
-function nelGruppo(p) { return stato.gruppo === "tutti" || p.livello === stato.gruppo; }
-function disponibili() { return DATI.personaggi.filter(p => nelGruppo(p) && !stato.usciti.includes(p.nome)); }
-const aCaso = arr => arr[Math.floor(Math.random() * arr.length)];
-
-const bottoneGira = document.getElementById("gira");
-let inCorso = false;
-
-function gira() {
-  const scelta = disponibili();
-  if (!scelta.length || inCorso) return;
-  inCorso = true;
-  bottoneGira.disabled = true;
-  document.getElementById("imprevisto").hidden = true;
-  const finale = aCaso(scelta);
-  const salti = 14;
-  let i = 0;
-  function salto() {
-    if (i < salti) {
-      puntaSu(aCaso(DATI.personaggi), false);
-      i++;
-      setTimeout(salto, 70 + i * i * 2.2); // rallenta verso la fine
-    } else {
-      puntaSu(finale, true);
-      stato.usciti.push(finale.nome);
-      stato.ultimo = finale.nome;
-      salva();
-      mostraScheda(finale);
-      inCorso = false;
-      aggiorna();
-    }
-  }
-  salto();
-}
-
-function tiraImprevisto() {
-  if (!DATI.imprevisti.length) return;
-  const box = document.getElementById("imprevisto");
-  box.hidden = false;
-  box.innerHTML = `<h2>⚡ Today something is different</h2><p>${escapa(aCaso(DATI.imprevisti))}</p>`;
-}
 
 // ---------- Missioni e parole vietate ----------
 
@@ -400,63 +352,85 @@ function mostraMissioni() {
   const ordine = ["base", "avanzato", "sfida"];
   const nomi = { base: "Base", avanzato: "Avanzato", sfida: "Sfida" };
   const i = ordine.indexOf(stato.livello);
-  const prima = i > 0 ? `<p class="livello-precedente">Everything in "${nomi[ordine[i - 1]]}", plus:</p>` : "";
-  document.getElementById("missioni").innerHTML = `
-    <h2>Your missions · ${nomi[stato.livello]}</h2>
-    ${prima}
-    <ul>${(DATI.missioni[stato.livello] || []).map(m => `<li>${escapa(m)}</li>`).join("")}</ul>
-    ${DATI.vietate.length ? `<h2 style="margin-top:14px">Banned words</h2>
-      <div class="vietate">${DATI.vietate.map(w => `<span>${escapa(w)}</span>`).join("")}</div>` : ""}`;
+  document.getElementById("missioni").innerHTML =
+    (i > 0 ? `<p class="nota">Everything in "${nomi[ordine[i - 1]]}", plus:</p>` : "") +
+    `<ul>${lista(DATI.missioni[stato.livello] || [], m => `<li>${escapa(m)}</li>`)}</ul>`;
+  document.getElementById("vietate").innerHTML = lista(DATI.vietate, w => `<span>${escapa(w)}</span>`);
 }
 
-// ---------- Interfaccia ----------
+function mostraImprevisto() {
+  const box = document.getElementById("imprevisto");
+  box.hidden = !stato.imprevisto;
+  if (stato.imprevisto) box.innerHTML = `<strong>⚡ Today something is different</strong><p>${escapa(stato.imprevisto)}</p>`;
+}
 
-function aggiorna() {
-  for (const [id, chiave] of [["scelta-personaggi", "gruppo"], ["scelta-missioni", "livello"]]) {
+// ---------- Estrazione ----------
+
+const aCaso = arr => arr[Math.floor(Math.random() * arr.length)];
+const bottoneGira = document.getElementById("gira");
+
+function gira() {
+  const scelta = DATI.personaggi.filter(p => p.livello === stato.gruppo && p.nome !== stato.personaggio);
+  if (!scelta.length) return;
+  bottoneGira.disabled = true;
+  const finale = aCaso(scelta);
+  let i = 0;
+  (function salto() {
+    if (i < 14) {
+      puntaSu(aCaso(DATI.personaggi), false);
+      i++;
+      setTimeout(salto, 70 + i * i * 2.2); // rallenta verso la fine
+    } else {
+      puntaSu(finale, true);
+      stato.personaggio = finale.nome;
+      stato.imprevisto = null;
+      salva();
+      bottoneGira.disabled = false;
+      mostra(finale);
+    }
+  })();
+}
+
+// ---------- Comandi ----------
+
+function aggiornaBottoni() {
+  for (const [id, chiave] of [["scelta-gruppo", "gruppo"], ["scelta-livello", "livello"]]) {
     for (const b of document.querySelectorAll(`#${id} button`)) {
       b.setAttribute("aria-pressed", String(b.dataset.valore === stato[chiave]));
     }
   }
-  const totale = DATI.personaggi.filter(nelGruppo).length;
-  const rimasti = disponibili().length;
-  document.getElementById("contatore").textContent = rimasti
-    ? `Ancora ${rimasti} su ${totale}`
-    : `Personaggi finiti (${totale}): cambia gruppo o ricomincia la classe`;
-  bottoneGira.disabled = inCorso || !rimasti;
-  document.getElementById("usciti").innerHTML = stato.usciti
-    .map(n => trova(n)).filter(Boolean)
-    .map(p => `<li>${escapa(p.nome)} · ${escapa(p.dove || "")}</li>`).join("") || "<li>Nessuno, per ora.</li>";
-  mostraMissioni();
 }
-
-for (const [id, chiave] of [["scelta-personaggi", "gruppo"], ["scelta-missioni", "livello"]]) {
+for (const [id, chiave] of [["scelta-gruppo", "gruppo"], ["scelta-livello", "livello"]]) {
   document.getElementById(id).addEventListener("click", e => {
     const b = e.target.closest("button");
     if (!b) return;
     stato[chiave] = b.dataset.valore;
     salva();
-    aggiorna();
+    aggiornaBottoni();
+    mostraMissioni();
   });
 }
 bottoneGira.addEventListener("click", gira);
-document.getElementById("tira-imprevisto").addEventListener("click", tiraImprevisto);
-document.getElementById("ricomincia").addEventListener("click", () => {
-  if (!confirm("Ricominciare? Tutti i personaggi tornano disponibili.")) return;
-  stato.usciti = [];
-  stato.ultimo = null;
+document.getElementById("tira-imprevisto").addEventListener("click", () => {
+  const altri = DATI.imprevisti.filter(t => t !== stato.imprevisto);
+  if (!altri.length) return;
+  stato.imprevisto = aCaso(altri);
   salva();
-  scheda.className = "riquadro vuota";
-  scheda.innerHTML = "Premi <strong>Gira</strong> per estrarre un personaggio.";
-  document.getElementById("imprevisto").hidden = true;
-  spillo.setAttribute("transform", "translate(-50,-50)");
-  for (const p of gruppoPaesi.querySelectorAll(".acceso")) p.classList.remove("acceso");
-  aggiorna();
+  mostraImprevisto();
+  document.getElementById("imprevisto").scrollIntoView({ behavior: "smooth", block: "center" });
+});
+document.getElementById("di-nuovo").addEventListener("click", () => {
+  if (!confirm("Vuoi davvero cambiare personaggio?")) return;
+  document.getElementById("risultato").hidden = true;
+  document.getElementById("inizio").hidden = false;
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// Riprende dall'ultimo personaggio estratto (utile se l'attività dura due lezioni)
-const ultimo = trova(stato.ultimo);
-if (ultimo) { puntaSu(ultimo, true); mostraScheda(ultimo); }
-aggiorna();
+// Se sul dispositivo c'è già un personaggio, si riparte da lì
+aggiornaBottoni();
+mostraMissioni();
+const giaEstratto = trova(stato.personaggio);
+if (giaEstratto) { puntaSu(giaEstratto, true); mostra(giaEstratto); }
 </script>
 </body>
 </html>

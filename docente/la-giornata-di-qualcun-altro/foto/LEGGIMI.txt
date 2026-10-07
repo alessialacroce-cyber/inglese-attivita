@@ -1,0 +1,3 @@
+Qui vanno le foto dei personaggi (jpg o png, meglio quadrate).
+Il nome del file si scrive nella riga "foto:" del personaggio in contenuti.js.
+Solo foto con licenza libera (per esempio Unsplash o Pexels) e di persone non famose.

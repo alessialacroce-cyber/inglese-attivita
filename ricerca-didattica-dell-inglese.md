@@ -196,7 +196,9 @@ Criteri:
 
 ## 7. Attività 7: la giornata di qualcun altro
 
-**Dove sta:** sezione docente, `docente/la-giornata-di-qualcun-altro/`. Si apre `index.html` nel browser e si proietta sulla LIM; funziona anche senza internet.
+**Dove sta:** `docente/la-giornata-di-qualcun-altro/`. Pensata per il **telefono** (o il Chromebook) di ogni studente; si può anche proiettare sulla LIM per mostrarla. Funziona senza internet una volta aperta, ma per arrivare sui telefoni deve essere **messa online** (da decidere, vedi sotto).
+
+**Com'è fatta (seconda versione, 7 ottobre 2026):** una colonna sola. Lo studente sceglie *Semplice* o *Difficile* e preme *Gira*. La scheda mostra solo l'essenziale: **un'icona o una foto del personaggio**, *"Hi, I'm Anouk, 29. I'm a nurse..."*, il luogo e l'ora locale. Fatti, parole utili, missioni e parole vietate stanno in sezioni da aprire. Il personaggio resta salvato sul telefono anche se si chiude la pagina. Sotto, *Imprevisto* e *Gira di nuovo*.
 
 **L'idea in una riga:** la routine non è più "la mia giornata" ma quella di un **adulto con un lavoro, un luogo e dei vincoli precisi** (fuso orario, clima, turni, distanze). Il personaggio costringe a usare lingua che "mi alzo / vado a scuola" non richiede.
 
@@ -254,9 +256,12 @@ Si sceglie in alto: **Base**, **Avanzato** o **Sfida**. Ogni livello comprende i
 |---|---|
 | `index.html` | La pagina. |
 | `contenuti.js` | **Personaggi, imprevisti, missioni e parole vietate**, in testo semplice: si modifica senza saper programmare (le istruzioni sono in cima al file). |
+| `foto/` | Foto facoltative dei personaggi. Senza foto compare un'icona (emoji della persona e del suo lavoro). Solo foto con licenza libera (Unsplash, Pexels) e di persone non famose. |
 | `mappa.js` | Contorni dei paesi (dati Natural Earth, pubblico dominio). Non si tocca. |
 
-La pagina non chiede nomi, non registra, non manda niente a nessuno e non usa l'intelligenza artificiale. Ricorda solo, nel browser del docente, i personaggi già usciti (si azzera con *Ricomincia la classe*).
+La pagina non chiede nomi, non registra, non manda niente a nessuno e non usa l'intelligenza artificiale. Ricorda solo, sul telefono dello studente, il personaggio estratto.
+
+**Attenzione:** ogni telefono estrae per conto suo, quindi due studenti possono avere lo stesso personaggio. Per il gioco "Who am I?" basta controllare che i due compagni di coppia non ce l'abbiano uguale.
 
 ### Decisioni prese (7 ottobre 2026)
 
@@ -268,3 +273,5 @@ La pagina non chiede nomi, non registra, non manda niente a nessuno e non usa l'
 
 1. Il livello delle missioni lo sceglie **lo studente** o **il docente**?
 2. Controllare i fatti dei personaggi e aggiungerne o toglierne qualcuno.
+3. **Come metterla online** per i telefoni (serve il permesso): GitHub Pages, oppure un link privato condivisibile.
+4. **Foto:** cercarle (licenza libera) oppure tenere le icone.

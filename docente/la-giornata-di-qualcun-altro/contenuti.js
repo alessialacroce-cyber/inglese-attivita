@@ -8,6 +8,11 @@
 //   separato dal successivo da una riga vuota.
 //   nome:      nome ed età (deve essere diverso per ogni personaggio)
 //   chi:       che lavoro fa
+//   icona:     due emoji: la persona e un simbolo del lavoro (es. 👩‍⚕️ 🚲)
+//   foto:      facoltativa. Nome di un file messo nella cartella "foto"
+//              (es. anouk.jpg). Se c'è, prende il posto dell'icona.
+//              Usare solo foto con licenza libera (es. Unsplash, Pexels)
+//              e di persone non famose.
 //   dove:      luogo, come compare sulla scheda
 //   paese:     nome del paese sulla mappa, in inglese (si colora).
 //              Si può lasciare vuoto (per esempio nello spazio).
@@ -28,6 +33,8 @@ window.TESTO_CONTENUTI = `
 
 nome: Anouk, 29
 chi: a nurse who cycles to the hospital
+icona: 👩‍⚕️ 🚲
+foto:
 dove: Utrecht, the Netherlands
 paese: Netherlands
 posizione: 52.09, 5.12
@@ -39,6 +46,8 @@ parole: bike lane, ward, early shift, rush hour, raincoat
 
 nome: Min-jun, 31
 chi: an English teacher at a hagwon (a private evening academy)
+icona: 👨‍🏫 📚
+foto:
 dove: Seoul, South Korea
 paese: South Korea
 posizione: 37.57, 126.98
@@ -50,6 +59,8 @@ parole: academy, entrance exam, late shift, subway, pressure
 
 nome: Wei Ling, 45
 chi: a hawker (a street-food cook with her own stall)
+icona: 👩‍🍳 🍜
+foto:
 dove: Singapore
 paese:
 posizione: 1.35, 103.82
@@ -61,6 +72,8 @@ parole: stall, queue, ingredients, humid, regular customers
 
 nome: Julien, 38
 chi: a baker
+icona: 👨‍🍳 🥖
+foto:
 dove: Lyon, France
 paese: France
 posizione: 45.76, 4.84
@@ -72,6 +85,8 @@ parole: dough, oven, rise, flour, customers
 
 nome: Yuki, 27
 chi: a video game designer who commutes by train
+icona: 🧑‍💻 🚆
+foto:
 dove: Tokyo, Japan
 paese: Japan
 posizione: 35.68, 139.69
@@ -83,6 +98,8 @@ parole: commute, crowded, deadline, overtime, team meeting
 
 nome: Darren, 50
 chi: a double-decker bus driver
+icona: 🧔 🚌
+foto:
 dove: London, United Kingdom
 paese: United Kingdom
 posizione: 51.51, -0.13
@@ -94,6 +111,8 @@ parole: route, passengers, traffic, timetable, shift
 
 nome: Maya, 26
 chi: a professional dog walker
+icona: 👩 🐕
+foto:
 dove: New York City, USA
 paese: United States of America
 posizione: 40.78, -73.97
@@ -105,6 +124,8 @@ parole: leash, apartment block, owner, tips, pack
 
 nome: Lucía, 34
 chi: a primary school teacher
+icona: 👩‍🏫 ✏️
+foto:
 dove: Mexico City, Mexico
 paese: Mexico
 posizione: 19.43, -99.13
@@ -116,6 +137,8 @@ parole: pupils, shift, metro, altitude, marking
 
 nome: Liam, 24
 chi: a lifeguard
+icona: 👱‍♂️ 🌊
+foto:
 dove: Bondi Beach, Sydney, Australia
 paese: Australia
 posizione: -33.89, 151.27
@@ -127,6 +150,8 @@ parole: rip current, flags, rescue, sunscreen, waves
 
 nome: Thandiwe, 33
 chi: a cable car operator on Table Mountain
+icona: 👩 🚡
+foto:
 dove: Cape Town, South Africa
 paese: South Africa
 posizione: -33.96, 18.40
@@ -138,6 +163,8 @@ parole: cabin, wind, forecast, tourists, safety check
 
 nome: Gunnar, 41
 chi: a lifeguard at a public geothermal swimming pool
+icona: 🧔 ♨️
+foto:
 dove: Reykjavík, Iceland
 paese: Iceland
 posizione: 64.15, -21.94
@@ -149,6 +176,8 @@ parole: hot tub, geothermal, daylight, steam, regulars
 
 nome: Martín, 30
 chi: a waiter in a traditional café-restaurant
+icona: 👨 ☕
+foto:
 dove: Buenos Aires, Argentina
 paese: Argentina
 posizione: -34.60, -58.38
@@ -160,6 +189,8 @@ parole: tip, menu, regulars, late, order
 
 nome: Chloé, 36
 chi: an accountant
+icona: 👩‍💼 ❄️
+foto:
 dove: Montreal, Canada
 paese: Canada
 posizione: 45.50, -73.57
@@ -171,6 +202,8 @@ parole: tunnel, snowstorm, bilingual, commute, spreadsheet
 
 nome: Ramesh, 48
 chi: a dabbawala (a lunchbox delivery man)
+icona: 👨 🍱
+foto:
 dove: Mumbai, India
 paese: India
 posizione: 19.08, 72.88
@@ -182,6 +215,8 @@ parole: lunchbox, local train, code, deliver, collect
 
 nome: Faith, 28
 chi: a running coach
+icona: 🏃‍♀️ ⏱️
+foto:
 dove: Iten, Kenya
 paese: Kenya
 posizione: 0.67, 35.51
@@ -193,6 +228,8 @@ parole: altitude, training camp, track, recover, stretch
 
 nome: Inês, 39
 chi: a tram driver
+icona: 👩 🚋
+foto:
 dove: Lisbon, Portugal
 paese: Portugal
 posizione: 38.72, -9.14
@@ -206,6 +243,8 @@ parole: steep, brakes, narrow street, tourists, rails
 
 nome: Camila, 35
 chi: an engineer at the ALMA radio telescope
+icona: 👩‍🔬 🔭
+foto:
 dove: Atacama Desert, Chile
 paese: Chile
 posizione: -23.02, -67.75
@@ -217,6 +256,8 @@ parole: antenna, altitude sickness, shift, base camp, night sky
 
 nome: Ryan, 44
 chi: an ice road truck driver
+icona: 👨 🚚
+foto:
 dove: Northwest Territories, Canada
 paese: Canada
 posizione: 64.0, -112.0
@@ -228,6 +269,8 @@ parole: frozen lake, load, crack, convoy, mine
 
 nome: Bat-Erdene, 40
 chi: a nomadic herder
+icona: 👨‍🌾 🐎
+foto:
 dove: the steppe, Mongolia
 paese: Mongolia
 posizione: 47.5, 103.0
@@ -239,6 +282,8 @@ parole: herd, pasture, move camp, solar panel, livestock
 
 nome: Sarah, 37
 chi: a teacher at the School of the Air
+icona: 👩‍🏫 💻
+foto:
 dove: Alice Springs, Australia
 paese: Australia
 posizione: -23.70, 133.88
@@ -250,6 +295,8 @@ parole: remote, station, online lesson, outback, connection
 
 nome: Ingrid, 32
 chi: a climate scientist
+icona: 👩‍🔬 🌙
+foto:
 dove: Longyearbyen, Svalbard (Norway)
 paese: Norway
 posizione: 78.22, 15.65
@@ -261,6 +308,8 @@ parole: polar night, polar bear, fieldwork, data, darkness
 
 nome: Tunde, 29
 chi: an app developer at a start-up
+icona: 👨‍💻 📱
+foto:
 dove: Lagos, Nigeria
 paese: Nigeria
 posizione: 6.52, 3.38
@@ -272,6 +321,8 @@ parole: deadline, generator, remote work, client, bug
 
 nome: Pemba, 42
 chi: a Sherpa mountain guide
+icona: 🧗‍♂️ 🏔️
+foto:
 dove: Khumbu Valley, Nepal
 paese: Nepal
 posizione: 27.9, 86.8
@@ -283,6 +334,8 @@ parole: expedition, base camp, acclimatise, oxygen, rope
 
 nome: Fatima, 46
 chi: the owner of a bakery, during the month of Ramadan
+icona: 👩‍🍳 🌙
+foto:
 dove: Fez, Morocco
 paese: Morocco
 posizione: 34.03, -5.00
@@ -294,6 +347,8 @@ parole: fast, dawn, sunset, medina, sweets
 
 nome: João, 33
 chi: a teacher in a river community
+icona: 👨‍🏫 🛶
+foto:
 dove: near Manaus, Amazonas, Brazil
 paese: Brazil
 posizione: -3.12, -60.02
@@ -305,6 +360,8 @@ parole: boat, flood, dry season, community, canoe
 
 nome: Chiara, 41
 chi: an astronaut
+icona: 👩‍🚀 🛰️
+foto:
 dove: the International Space Station, 400 km above the Earth
 paese:
 posizione: 20.0, -150.0
@@ -316,6 +373,8 @@ parole: orbit, weightless, experiment, spacewalk, mission control
 
 nome: Omar, 39
 chi: a construction engineer
+icona: 👷‍♂️ 🏗️
+foto:
 dove: Dubai, United Arab Emirates
 paese: United Arab Emirates
 posizione: 25.20, 55.27
@@ -327,6 +386,8 @@ parole: building site, crane, heat, safety, workers
 
 nome: Luca, 34
 chi: the chef at Concordia research station
+icona: 👨‍🍳 🧊
+foto:
 dove: Concordia Station, Antarctica
 paese: Antarctica
 posizione: -75.10, 123.33
@@ -338,6 +399,8 @@ parole: supplies, crew, isolation, freezer, frozen
 
 nome: Rosa, 31
 chi: a guide on the Inca Trail
+icona: 👩 🥾
+foto:
 dove: near Cusco, Peru
 paese: Peru
 posizione: -13.2, -72.5
@@ -349,6 +412,8 @@ parole: trek, porter, permit, campsite, mountain pass
 
 nome: Joy, 26
 chi: a call-centre agent
+icona: 👩‍💼 🎧
+foto:
 dove: Manila, the Philippines
 paese: Philippines
 posizione: 14.60, 120.98
@@ -360,6 +425,8 @@ parole: night shift, customer, headset, time difference, complaint
 
 nome: Ahmed, 47
 chi: an archaeologist
+icona: 👨‍🔬 🏺
+foto:
 dove: Luxor, Egypt
 paese: Egypt
 posizione: 25.69, 32.64
