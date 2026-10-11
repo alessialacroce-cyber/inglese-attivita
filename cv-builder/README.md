@@ -77,3 +77,18 @@ Opzioni gratuite per 21 studenti:
 | **Google Gemini (piano gratuito) + piccolo server Cloudflare Worker gratuito** | 0 € | nessuno | buona, anche in italiano | la chiave API è della docente e resta nascosta nel Worker; limiti giornalieri sufficienti per una classe; sul piano gratuito Google può usare i testi per migliorare i servizi, quindi all'AI si inviano solo i testi delle esperienze, mai nome, email o telefono |
 | **Modello AI dentro il browser (WebLLM)** | 0 € | nessuno | discreta, più debole in italiano | massima privacy, niente server; richiede PC recenti con Chrome/Edge e un download iniziale di 1–2 GB per computer |
 | **Groq / OpenRouter (modelli gratuiti) + Worker** | 0 € | nessuno | buona | come Gemini, ma i modelli gratuiti disponibili cambiano spesso |
+
+## CV Lab 2 (`cv-lab-v2.html`) – bullet point guidati
+
+Versione di prova con un nuovo modo di lavorare sulle skill. `index.html` (versione 1) resta com'è: le due versioni salvano i dati separatamente, quindi si possono usare entrambe sullo stesso computer.
+
+Cosa cambia rispetto alla versione 1:
+- **Ogni esperienza ha la parte “Describe your activity”** con il pulsante **Aiutami a scrivere un bullet point**:
+  1. *Quale skill vuoi dimostrare?* Hard skill (cosa sai fare: programmi, macchine, tecniche) o soft skill (come lavori: con gli altri, con i tempi, con i problemi). Si sceglie tra 14 hard e 10 soft suggerite per grafica o meccanica, oppure si scrive la propria.
+  2. *Domande guida*: cosa hai fatto (con i verbi d'azione), per chi o in che contesto, come l'hai fatto. Il bullet point si compone mentre si risponde e si può correggere.
+  3. Nel CV appare come **Skill: frase**.
+- **“Vedi un esempio”** mostra un esempio alla volta diviso nelle tre domande. Gli esempi non si possono inserire con un clic e, se la frase ricalca un esempio quasi parola per parola, il pulsante “Aggiungi al CV” si blocca.
+- **La sezione Skills si compone da sola** dalle skill dei bullet point, divisa in *Hard skills* e *Soft skills*: nel CV non può comparire una skill non dimostrata.
+- Il campo **“Altre cose che hai fatto”** accoglie le frasi che non dimostrano una skill.
+- Nel pannello *Aspetto* si sceglie l'**indirizzo** (grafica / meccanica) per suggerimenti ed esempi.
+- Tutto il resto è come nella versione 1: stili, PDF, Salva/Apri file, Copia per le Note, Ho finito, funzionamento senza internet. Un CV salvato con la versione 1 si apre anche nella 2.
