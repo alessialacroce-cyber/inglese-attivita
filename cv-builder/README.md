@@ -78,7 +78,7 @@ Opzioni gratuite per 21 studenti:
 | **Modello AI dentro il browser (WebLLM)** | 0 € | nessuno | discreta, più debole in italiano | massima privacy, niente server; richiede PC recenti con Chrome/Edge e un download iniziale di 1–2 GB per computer |
 | **Groq / OpenRouter (modelli gratuiti) + Worker** | 0 € | nessuno | buona | come Gemini, ma i modelli gratuiti disponibili cambiano spesso |
 
-## CV Lab 2 (`cv-lab-v2.html`) – bullet point guidati
+## CV Lab 2 (`v2/index.html`) – bullet point guidati
 
 Versione di prova con un nuovo modo di lavorare sulle skill. `index.html` (versione 1) resta com'è: le due versioni salvano i dati separatamente, quindi si possono usare entrambe sullo stesso computer.
 
