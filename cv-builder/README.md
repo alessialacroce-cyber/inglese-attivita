@@ -59,7 +59,7 @@ Suggerimenti per gli studenti:
 
 ## Privacy
 
-Nessun dato esce dal computer: non ci sono server, account o tracciamenti. I font sono caricati da Google Fonts; se manca la connessione la pagina usa font di sistema.
+Nessun dato esce dal computer: non ci sono server, account o tracciamenti. I caratteri sono inclusi nel file, quindi `index.html` funziona identico anche senza internet (utile nei laboratori senza rete).
 
 ## Versione 2 – assistente AI (da fare)
 
