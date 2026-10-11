@@ -324,6 +324,27 @@ details.tips ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; display:
 .cv-classico .cv-section h2 { text-align: left; border-bottom: .5pt solid var(--ink); padding-bottom: 2pt; color: var(--ink); }
 .cv-classico .cv-headline { color: var(--ink-soft); font-style: italic; font-weight: 400; }
 
+/* ---------- dizionario ---------- */
+.dict { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 100vw); z-index: 40; background: var(--surface); border-left: 1px solid var(--line); box-shadow: -8px 0 30px rgba(20,40,60,.15); display: flex; flex-direction: column; gap: 10px; padding-inline: 16px; padding-block: calc(env(safe-area-inset-top, 0px) + 14px) calc(env(safe-area-inset-bottom, 0px) + 14px); }
+.dict[hidden] { display: none !important; }
+.dict-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.dict-head b { font-size: 16px; }
+.dict-head .btn { margin-left: auto; }
+#dict-q { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); padding: 8px 10px; }
+#dict-q:focus { border-color: var(--accent); outline: none; background: var(--surface); }
+.dict-cats { display: flex; flex-wrap: wrap; gap: 5px; }
+.dchip { font-size: 12.5px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 99px; padding: 2px 9px; cursor: pointer; }
+.dchip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.dict-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
+.dict-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--line); }
+.dword { display: flex; flex-direction: column; min-width: 0; }
+.dit { font-size: 13.5px; color: var(--muted); }
+.den { font-weight: 700; }
+.dnote { font-size: 12.5px; color: var(--muted); font-style: italic; }
+.dempty { color: var(--muted); grid-template-columns: 1fr !important; }
+@media (min-width: 1100px) { body.dict-open { padding-right: 400px; } }
+@media print { .dict { display: none !important; } body.dict-open { padding-right: 0; } }
+
 /* ---------- avvio ed esempio da guardare (v2) ---------- */
 .start[hidden], .viewbar[hidden] { display: none !important; }
 .start { padding-inline: 16px; padding-block: 40px; display: flex; justify-content: center; }
@@ -438,6 +459,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
 <div class="topbar">
   <div class="brand"><b>CV Lab 2</b><span>bullet point guidati · classi quinte</span></div>
   <div class="actions">
+    <button class="btn" id="btn-dict" type="button">Dizionario</button>
     <button class="btn" id="btn-new" type="button">Nuovo CV</button>
     <button class="btn" id="btn-notes" type="button">Copia per le Note</button>
     <button class="btn" id="btn-open" type="button">Apri file</button>
@@ -483,6 +505,18 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     </div>
   </section>
 </main>
+
+<aside class="dict" id="dict" hidden aria-label="Dizionario italiano-inglese">
+  <header class="dict-head">
+    <b>Dizionario per il CV</b>
+    <span class="hint">italiano ↔ inglese · funziona offline</span>
+    <button type="button" class="btn ghost small" id="dict-close" aria-label="Chiudi il dizionario">Chiudi ✕</button>
+  </header>
+  <input type="search" id="dict-q" placeholder="Cerca in italiano o in inglese…" aria-label="Cerca una parola">
+  <div class="dict-cats" id="dict-cats"></div>
+  <p class="hint" id="dict-count"></p>
+  <ul class="dict-list" id="dict-list"></ul>
+</aside>
 
 <dialog id="dlg"><div class="body" id="dlg-body"></div></dialog>
 
@@ -1314,6 +1348,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     const id = it.id, ph = PH[f];
     const stepA = `<div class="substep${bld.step > 1 ? " done" : ""}">
         <p class="substep-title">A · Quale skill vuoi dimostrare con questo bullet point?</p>
+        <p class="hint">Cerchi il nome inglese di una skill? <button type="button" class="btn small" data-opendict="soft">Apri il dizionario</button></p>
         <div class="typeinfo">
           <button type="button" class="typebtn hard" data-btype="hard" aria-pressed="${bld.type === "hard"}"><b>Hard skill</b><span>Cosa sai fare: programmi, macchine, tecniche.</span></button>
           <button type="button" class="typebtn soft" data-btype="soft" aria-pressed="${bld.type === "soft"}"><b>Soft skill</b><span>Come lavori: con gli altri, con i tempi, con i problemi.</span></button>
@@ -1330,6 +1365,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     return `<div class="builder"><h3>${bld.editPi != null ? "Modifica bullet point" : "Nuovo bullet point"} · ${esc(bld.skill)}</h3>${stepA}
       <div class="substep">
         <p class="substep-title">B · Racconta dove si vede “${esc(bld.skill)}”</p>
+        <p class="hint">Non sai una parola? <button type="button" class="btn small" data-opendict="verbi">Apri il dizionario</button></p>
         <div class="q">
           <label for="bw-${id}"><b>1.</b> Cosa hai fatto? Scegli un verbo, poi scrivi cosa</label>
           <div class="bchips">${BVERBS.map(v => `<button type="button" class="bchip" data-bverb="${v}" aria-pressed="${bld.verb === v}">${v}</button>`).join("")}</div>
@@ -1457,6 +1493,284 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     }
     return false;
   }
+
+  /* ---------- dizionario offline (italiano ↔ inglese) per il CV ---------- */
+  // formato: "categoria|italiano|inglese|nota (facoltativa)"
+  const DICT_CATS = { sez: "Sezioni del CV", verbi: "Verbi d'azione", soft: "Soft skill", mecc: "Meccanica", graf: "Grafica", scuola: "Scuola e lavoro", frasi: "Frasi utili", date: "Date e tempi", falsi: "Falsi amici" };
+  const DICT = `
+sez|Profilo|Profile|anche: Summary
+sez|Esperienze lavorative|Work Experience|al singolare: experience qui è non numerabile
+sez|Stage / tirocinio / PCTO|Internship|anche: Work placement (UK)
+sez|Istruzione|Education
+sez|Competenze|Skills
+sez|Competenze tecniche|Technical skills / Hard skills
+sez|Competenze trasversali|Soft skills
+sez|Lingue|Languages
+sez|Certificazioni|Certifications
+sez|Progetti|Projects
+sez|Interessi|Interests
+sez|Volontariato|Volunteering|anche: Volunteer work
+sez|Dati personali / contatti|Contact details
+sez|Patente di guida|Driving licence|USA: driver's license
+sez|Referenze|References
+scuola|Diploma di maturità|High school diploma
+scuola|Istituto tecnico|Technical high school|anche: technical institute
+scuola|Istituto professionale|Vocational school
+scuola|Indirizzo di studio|Course of study|es. Diploma in Graphics and Communication
+scuola|Voto finale|Final grade|es. Final grade: 85/100
+scuola|Previsto (diploma non ancora preso)|Expected|es. Expected: June 2026
+scuola|Tirocinante / stagista|Intern|anche: trainee
+scuola|Apprendista|Apprentice
+scuola|Tutor aziendale|Company tutor|anche: supervisor
+scuola|Alternanza scuola-lavoro / PCTO|Work placement|anche: school-to-work programme
+scuola|Progetto di gruppo|Group project|anche: team project
+scuola|Compagni di classe|Classmates
+scuola|Attestato|Certificate
+scuola|Corso sulla sicurezza|Health and safety course
+scuola|Lavoretto estivo|Summer job
+scuola|Lavoro part-time|Part-time job
+scuola|Datore di lavoro|Employer
+scuola|Dipendente|Employee
+scuola|Azienda / ditta|Company|anche: firm
+scuola|Colloquio di lavoro|Job interview
+scuola|Lettera di presentazione|Cover letter
+scuola|Annuncio di lavoro|Job advert|anche: job posting, job ad
+scuola|Candidarsi (per un lavoro)|to apply (for a job)|es. I am applying for the role of…
+scuola|Candidatura|Application
+scuola|Posizione / ruolo|Role|anche: position
+scuola|attività (cosa facevo)|Activities|anche: tasks
+scuola|mansioni / compiti|Duties|anche: responsibilities
+verbi|progettare|Designed|design
+verbi|creare|Created|create
+verbi|sviluppare|Developed|develop
+verbi|pianificare|Planned|plan
+verbi|organizzare|Organised|USA: organized
+verbi|gestire|Managed|manage
+verbi|coordinare|Coordinated|coordinate
+verbi|realizzare / produrre|Produced|anche: made (make)
+verbi|costruire|Built|build
+verbi|assemblare / montare|Assembled|assemble
+verbi|disegnare (disegno tecnico)|Drew|draw
+verbi|impaginare|Laid out|lay out
+verbi|modificare (testo, video, foto)|Edited|edit
+verbi|controllare / verificare|Checked|check
+verbi|collaudare / testare|Tested|test
+verbi|ispezionare|Inspected|inspect
+verbi|misurare|Measured|measure
+verbi|riparare|Repaired|anche: fixed (fix)
+verbi|installare|Installed|install
+verbi|programmare (una macchina)|Programmed|program
+verbi|fare manutenzione|Maintained|anche: carried out maintenance
+verbi|migliorare|Improved|improve
+verbi|ridurre|Reduced|reduce
+verbi|risolvere|Solved|solve
+verbi|analizzare|Analysed|USA: analyzed
+verbi|presentare|Presented|present
+verbi|aiutare / supportare|Helped / Supported|help, support
+verbi|collaborare con|Worked with|anche: collaborated with
+verbi|usare / utilizzare|Used|use
+verbi|preparare|Prepared|prepare
+verbi|saldare|Welded|weld
+verbi|tornire|Turned|turn (al tornio)
+verbi|fresare|Milled|mill
+verbi|fotografare|Photographed|photograph
+verbi|illustrare|Illustrated|illustrate
+verbi|stampare|Printed|print
+verbi|ritoccare (una foto)|Retouched|retouch
+verbi|consegnare|Delivered|deliver
+verbi|rispettare una scadenza|Met a deadline|meet – met – met
+verbi|seguire (istruzioni, procedure)|Followed|follow
+verbi|partecipare a|Took part in|take part in
+verbi|imparare|Learned|UK anche: learnt
+verbi|formare / addestrare qualcuno|Trained|train
+verbi|accogliere (clienti)|Welcomed|welcome
+verbi|adattarsi a|Adapted to|adapt
+verbi|ascoltare|Listened to|listen to
+soft|lavoro di squadra|Teamwork
+soft|capacità di risolvere problemi|Problem solving
+soft|gestione del tempo|Time management
+soft|comunicazione|Communication
+soft|ascolto attivo|Active listening
+soft|flessibilità|Flexibility
+soft|capacità di adattamento|Adaptability
+soft|precisione|Precision|anche: accuracy
+soft|attenzione ai dettagli|Attention to detail
+soft|organizzazione|Organisation|USA: organization
+soft|affidabilità|Reliability
+soft|puntualità|Punctuality
+soft|senso di responsabilità|Responsibility
+soft|creatività|Creativity
+soft|spirito d'iniziativa|Initiative
+soft|lavorare sotto pressione|Working under pressure
+soft|voglia di imparare|Willingness to learn
+soft|accettare le critiche|Accepting feedback
+soft|lavorare in autonomia|Working independently
+soft|leadership|Leadership
+soft|pensiero critico|Critical thinking
+soft|attenzione alla sicurezza|Safety awareness
+soft|cura del cliente|Customer care|anche: customer service
+mecc|tornio|Lathe|tornio CNC: CNC lathe
+mecc|fresatrice|Milling machine
+mecc|trapano|Drill
+mecc|pezzo (in lavorazione)|Part|anche: workpiece
+mecc|disegno tecnico|Technical drawing
+mecc|quota (in un disegno)|Dimension
+mecc|tolleranza|Tolerance
+mecc|calibro|Caliper|UK anche: calliper
+mecc|micrometro|Micrometer
+mecc|controllo qualità|Quality control
+mecc|montaggio|Assembly
+mecc|disegno d'assieme|Assembly drawing
+mecc|manutenzione|Maintenance
+mecc|saldatura|Welding
+mecc|officina|Workshop
+mecc|reparto|Department|es. turning department = reparto torneria
+mecc|reparto produzione|Production department
+mecc|ufficio tecnico|Technical office
+mecc|stabilimento|Plant|anche: factory
+mecc|impianto|System|anche: plant (grande impianto)
+mecc|nastro trasportatore|Conveyor belt
+mecc|distinta base|Bill of materials|sigla: BOM
+mecc|utensile|Tool|utensile da taglio: cutting tool
+mecc|attrezzatura|Equipment|non numerabile: some equipment
+mecc|acciaio|Steel
+mecc|alluminio|Aluminium|USA: aluminum
+mecc|ingranaggio|Gear
+mecc|albero (meccanico)|Shaft
+mecc|vite|Screw
+mecc|bullone|Bolt
+mecc|oleodinamica|Hydraulics
+mecc|pneumatica|Pneumatics
+mecc|PLC|PLC|programmable logic controller
+mecc|stampante 3D|3D printer|stampa 3D: 3D printing
+mecc|prototipo|Prototype
+mecc|norme ISO|ISO standards
+mecc|DPI (dispositivi di protezione)|PPE|personal protective equipment
+mecc|ciclo di lavorazione|Machining cycle
+mecc|programma CNC|CNC program|anche: G-code program
+mecc|progettazione con il computer|Computer-aided design|sigla: CAD
+mecc|macchina utensile|Machine tool
+mecc|fermo macchina|Machine stop|anche: downtime
+mecc|lamiera|Sheet metal
+graf|immagine coordinata|Brand identity|anche: visual identity
+graf|marchio (di un'azienda)|Brand|marchio registrato: trademark
+graf|logo|Logo
+graf|linee guida del marchio|Brand guidelines
+graf|impaginazione|Layout
+graf|carattere tipografico|Typeface|anche: font
+graf|tipografia (disciplina)|Typography
+graf|locandina / manifesto|Poster
+graf|volantino|Flyer
+graf|opuscolo|Brochure
+graf|catalogo|Catalogue|USA: catalog
+graf|biglietto da visita|Business card
+graf|imballaggio / confezione|Packaging
+graf|schizzo / bozza|Sketch|bozza di testo: draft
+graf|prova di stampa|Proof|anche: print proof
+graf|stampa offset|Offset printing
+graf|serigrafia|Screen printing
+graf|grafica vettoriale|Vector graphics
+graf|risoluzione|Resolution
+graf|ritocco fotografico|Photo retouching
+graf|montaggio video|Video editing
+graf|riprese|Filming|anche: shooting
+graf|set (di ripresa)|Set|es. on set
+graf|fonico|Sound technician
+graf|regista|Director
+graf|intervistato|Interviewee
+graf|cliente (committente)|Client
+graf|campagna pubblicitaria|Advertising campaign
+graf|post per i social|Social media posts
+graf|palette di colori|Colour palette|USA: color palette
+graf|file definitivi|Final files
+graf|illustrazione|Illustration
+graf|fotografia|Photography|una foto: a photo / a photograph
+graf|grafica animata|Motion graphics
+graf|interfaccia (di un'app o sito)|User interface|sigla: UI
+graf|sito web|Website
+graf|portfolio|Portfolio
+graf|tavola (di progetto)|Board|anche: artwork
+frasi|per (un cliente, una scuola)|for|es. for a local bakery
+frasi|durante|during|es. during my internship
+frasi|insieme a|together with|anche solo: with
+frasi|in collaborazione con|in collaboration with
+frasi|responsabile di|in charge of|anche: responsible for
+frasi|seguendo|following|es. following the technical drawings
+frasi|così che / in modo che|so that
+frasi|con l'obiettivo di|with the aim of|oppure: to + verbo
+frasi|come parte di|as part of
+frasi|sotto la supervisione di|under the supervision of
+frasi|in autonomia|independently|anche: on my own
+frasi|con attenzione|carefully
+frasi|in tempo|on time
+frasi|prima della scadenza|before the deadline
+frasi|ogni giorno / ogni settimana|every day / every week|anche: daily / weekly
+frasi|per la prima volta|for the first time
+frasi|grazie a|thanks to
+frasi|Cerco un ruolo come…|Looking for a role as…|es. Looking for a junior role as a CNC operator
+frasi|buona conoscenza di|good knowledge of
+frasi|conoscenza di base di|basic knowledge of
+frasi|madrelingua|native|es. Italian – native
+frasi|livello (lingua)|level|es. English – B2 (CEFR)
+date|attuale / in corso|Present|es. Sep 2024 – Present
+date|mesi abbreviati|Jan · Feb · Mar · Apr · May · Jun · Jul · Aug · Sep · Oct · Nov · Dec|sempre con la maiuscola
+date|estate 2025|Summer 2025
+date|tempo pieno|Full-time
+date|part-time|Part-time
+date|stage di 4 settimane|4-week internship|week senza -s davanti al nome
+date|160 ore|160 hours
+date|anno scolastico|School year|es. 2025/2026
+falsi|attualmente|currently|NON actually (= in realtà)
+falsi|stage (tirocinio)|internship|stage in inglese = palcoscenico
+falsi|realizzare (un progetto)|made / created|NON realised (= mi sono reso conto)
+falsi|eventualmente|if necessary|NON eventually (= alla fine)
+falsi|fabbrica|factory|NON fabric (= tessuto)
+falsi|magazzino|warehouse|NON magazine (= rivista)
+falsi|frequentare (una scuola)|attend|NON frequent
+falsi|assistere / aiutare|help / assist|attend = frequentare, essere presente
+falsi|sensibile|sensitive|NON sensible (= assennato)
+falsi|competenze|skills|competences è raro nei CV
+falsi|curriculum|CV|USA: résumé
+falsi|lavoro|job / work|a job = un impiego (numerabile); work = lavoro in generale (non numerabile)
+falsi|esperienza|experience|work experience: non numerabile; an experience = un'esperienza vissuta
+`.trim().split("\n").map(r => { const [cat, it, en, note] = r.split("|"); return { cat, it, en, note: note || "" }; });
+
+  let dictCat = "", dictQ = "";
+  function renderDict() {
+    const q = norm(dictQ);
+    const list = DICT.filter(d => (!dictCat || d.cat === dictCat) && (!q || norm(d.it + " " + d.en + " " + d.note).includes(q)));
+    $("#dict-cats").innerHTML = [["", "Tutto"]].concat(Object.entries(DICT_CATS)).map(([k, v]) => `<button type="button" class="dchip" data-dcat="${k}" aria-pressed="${dictCat === k}">${esc(v)}</button>`).join("");
+    $("#dict-count").textContent = list.length === 1 ? "1 parola" : `${list.length} parole`;
+    $("#dict-list").innerHTML = list.length ? list.map(d => `<li>
+        <div class="dword"><span class="dit">${esc(d.it)}</span><span class="den">${esc(d.en)}</span>${d.note ? `<span class="dnote">${esc(d.note)}</span>` : ""}</div>
+        <button type="button" class="btn small" data-dcopy="${esc(d.en)}">Copia</button></li>`).join("")
+      : `<li class="dempty">Nessuna parola trovata. Prova a scriverla in un altro modo, o in inglese.</li>`;
+  }
+  function openDict(cat) {
+    if (cat !== undefined) dictCat = cat;
+    $("#dict").hidden = false;
+    document.body.classList.add("dict-open");
+    fitSheet();
+    renderDict();
+    setTimeout(() => $("#dict-q").focus(), 30);
+  }
+  function closeDict() { $("#dict").hidden = true; document.body.classList.remove("dict-open"); fitSheet(); }
+  $("#btn-dict").addEventListener("click", () => $("#dict").hidden ? openDict() : closeDict());
+  $("#dict-close").addEventListener("click", closeDict);
+  $("#dict-q").addEventListener("input", e => { dictQ = e.target.value; renderDict(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#dict").hidden && !dlg.open) closeDict(); });
+  $("#dict").addEventListener("click", e => {
+    const c = e.target.closest("[data-dcat]");
+    if (c) { dictCat = c.dataset.dcat; renderDict(); return; }
+    const cp = e.target.closest("[data-dcopy]");
+    if (cp) {
+      const t = cp.dataset.dcopy;
+      const done = () => { cp.textContent = "Copiato ✓"; setTimeout(() => { cp.textContent = "Copia"; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => toast("Copia a mano: " + t));
+      else toast("Copia a mano: " + t);
+    }
+  });
+  $("#editor").addEventListener("click", e => { const d = e.target.closest("[data-opendict]"); if (d) openDict(d.dataset.opendict); });
 
   /* ---------- avvio: CV nuovo, CV salvato o esempio da guardare una volta sola ---------- */
   function setMode(m) {
