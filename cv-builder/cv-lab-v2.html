@@ -459,11 +459,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   <div class="start-box">
     <h1 id="start-title">Benvenuto in CV Lab</h1>
     <p>Da dove vuoi partire?</p>
-    <div class="start-options">
-      <button type="button" class="start-opt primary" data-go="blank"><b>Inizia un CV nuovo</b><span>Parti da un CV vuoto.</span></button>
-      <button type="button" class="start-opt" data-go="open"><b>Apri il mio CV salvato</b><span>Il file .json o il testo copiato nelle Note.</span></button>
-      <button type="button" class="start-opt" data-go="example"><b>Guarda un esempio prima di iniziare</b><span>Lo puoi vedere solo adesso: quando inizi a scrivere, gli esempi non saranno più disponibili.</span></button>
-    </div>
+    <div class="start-options" id="start-options"></div>
   </div>
 </section>
 
@@ -610,8 +606,8 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   let cv;
   try { const raw = localStorage.getItem(STORE_KEY); if (raw) cv = JSON.parse(raw); } catch (e) {}
   // "edit" = si scrive il proprio CV · "start" = scelta iniziale · "example" = esempio da guardare (non si salva)
-  let mode = "edit";
-  if (!cv || !cv.sections) { cv = blankCV(); mode = "start"; }
+  let mode = "start";
+  if (!cv || !cv.sections || cv.example) cv = blankCV();
   normalizeCv(cv);
 
   let saveTimer;
@@ -1477,7 +1473,31 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     renderEditor();
     window.scrollTo(0, 0);
   }
-  function showStart() { cv = blankCV(); setMode("start"); window.scrollTo(0, 0); }
+  // il CV in corso su questo computer, se c'è (gli esempi non contano)
+  function savedCv() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      const c = raw && JSON.parse(raw);
+      return c && Array.isArray(c.sections) && !c.example ? normalizeCv(c) : null;
+    } catch (e) { return null; }
+  }
+  let confirmNew = false;
+  function showStart() {
+    const saved = savedCv();
+    confirmNew = false;
+    cv = blankCV();
+    const who = saved && saved.header.name.trim();
+    $("#start-options").innerHTML = saved
+      ? `<button type="button" class="start-opt primary" data-go="continue"><b>Continua ${who ? "il CV di " + esc(who) : "il tuo CV"}</b><span>Riprendi da dove eri rimasto su questo computer.</span></button>
+         <button type="button" class="start-opt" data-go="open"><b>Apri un altro CV salvato</b><span>Il file .json o il testo copiato nelle Note.</span></button>
+         <button type="button" class="start-opt" data-go="blank" id="start-new"><b>Inizia un CV nuovo</b><span>Il CV in corso su questo computer verrà cancellato.</span></button>
+         <p class="hint">Gli esempi si possono guardare solo prima di iniziare il proprio CV.</p>`
+      : `<button type="button" class="start-opt primary" data-go="blank"><b>Inizia un CV nuovo</b><span>Parti da un CV vuoto.</span></button>
+         <button type="button" class="start-opt" data-go="open"><b>Apri il mio CV salvato</b><span>Il file .json o il testo copiato nelle Note.</span></button>
+         <button type="button" class="start-opt" data-go="example"><b>Guarda un esempio prima di iniziare</b><span>Lo puoi vedere solo adesso: quando inizi a scrivere, gli esempi non saranno più disponibili.</span></button>`;
+    setMode("start");
+    window.scrollTo(0, 0);
+  }
   function showExample(field) {
     cv = freshIds(clone(EXAMPLES[field]));
     cv.example = false;
@@ -1489,9 +1509,13 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   $("#start").addEventListener("click", e => {
     const b = e.target.closest("[data-go]");
     if (!b) return;
-    if (b.dataset.go === "blank") { cv = blankCV(); enterEdit(); }
+    if (b.dataset.go === "continue") { const c = savedCv(); if (c) { cv = c; enterEdit(); } return; }
+    if (b.dataset.go === "blank") {
+      if (savedCv() && !confirmNew) { confirmNew = true; b.querySelector("span").textContent = "Sicuro? Premi di nuovo: il CV in corso verrà cancellato."; return; }
+      cv = blankCV(); enterEdit(); persist();
+    }
     if (b.dataset.go === "open") $("#btn-open").click();
-    if (b.dataset.go === "example") showExample("grafica");
+    if (b.dataset.go === "example" && !savedCv()) showExample("grafica");
   });
   $("#viewbar").addEventListener("click", e => {
     const x = e.target.closest("[data-ex]");
@@ -1504,8 +1528,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     toast("Buon lavoro! Da qui in poi gli esempi non sono più disponibili.");
   });
 
-  if (mode === "start") setMode("start");
-  else { setMode("edit"); renderEditor(); }
+  showStart();
 })();
 </script>
 </body>
