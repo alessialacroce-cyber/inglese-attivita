@@ -92,3 +92,5 @@ Cosa cambia rispetto alla versione 1:
 - Il campo **“Altre cose che hai fatto”** accoglie le frasi che non dimostrano una skill.
 - Nel pannello *Aspetto* si sceglie l'**indirizzo** (grafica / meccanica) per suggerimenti ed esempi.
 - Tutto il resto è come nella versione 1: stili, PDF, Salva/Apri file, Copia per le Note, Ho finito, funzionamento senza internet. Un CV salvato con la versione 1 si apre anche nella 2.
+
+**Avvio ed esempi (CV Lab 2).** Alla prima apertura (o dopo “Ho finito”) compare la scelta: *Inizia un CV nuovo*, *Apri il mio CV salvato*, *Guarda un esempio prima di iniziare*. L'esempio si può solo guardare (niente modifica, salvataggio o copia) e, dopo “Ho capito, inizia il mio CV”, non si può più riaprire: “Nuovo CV” offre solo il CV vuoto.

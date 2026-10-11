@@ -324,6 +324,27 @@ details.tips ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; display:
 .cv-classico .cv-section h2 { text-align: left; border-bottom: .5pt solid var(--ink); padding-bottom: 2pt; color: var(--ink); }
 .cv-classico .cv-headline { color: var(--ink-soft); font-style: italic; font-weight: 400; }
 
+/* ---------- avvio ed esempio da guardare (v2) ---------- */
+.start[hidden], .viewbar[hidden] { display: none !important; }
+.start { padding-inline: 16px; padding-block: 40px; display: flex; justify-content: center; }
+.start-box { max-width: 560px; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.start-box h1 { margin: 0; font-size: 22px; text-wrap: balance; }
+.start-box > p { margin: 0; color: var(--muted); }
+.start-options { display: flex; flex-direction: column; gap: 10px; }
+.start-opt { text-align: left; border: 1px solid var(--line); background: var(--surface-2); border-radius: var(--radius); padding: 12px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.start-opt:hover { border-color: var(--accent); }
+.start-opt b { font-size: 16px; }
+.start-opt span { font-size: 13.5px; color: var(--muted); }
+.start-opt.primary { border: 2px solid var(--accent); }
+.viewbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--warn-bg); color: var(--fg); border-bottom: 1px solid var(--line); }
+.viewbar p { margin: 0; max-width: 70ch; }
+.viewbar-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+body[data-mode="start"] .topbar .actions, body[data-mode="start"] .tabs, body[data-mode="start"] main { display: none !important; }
+body[data-mode="example"] .topbar .actions, body[data-mode="example"] .tabs, body[data-mode="example"] .editor { display: none !important; }
+body[data-mode="example"] .workspace { grid-template-columns: minmax(0, 860px); justify-content: center; }
+body[data-mode="example"] .preview-col { display: block !important; }
+body[data-mode="example"] .sheet { user-select: none; -webkit-user-select: none; }
+
 /* ---------- bullet point guidati (v2) ---------- */
 .points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .point { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; align-items: start; border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 10px; background: var(--surface); font-size: 14px; }
@@ -431,6 +452,29 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   <div class="seg" role="group" aria-label="Vista">
     <button type="button" data-view="edit" aria-pressed="true">Modifica</button>
     <button type="button" data-view="preview" aria-pressed="false">Anteprima</button>
+  </div>
+</div>
+
+<section class="start" id="start" hidden aria-labelledby="start-title">
+  <div class="start-box">
+    <h1 id="start-title">Benvenuto in CV Lab</h1>
+    <p>Da dove vuoi partire?</p>
+    <div class="start-options">
+      <button type="button" class="start-opt primary" data-go="blank"><b>Inizia un CV nuovo</b><span>Parti da un CV vuoto.</span></button>
+      <button type="button" class="start-opt" data-go="open"><b>Apri il mio CV salvato</b><span>Il file .json o il testo copiato nelle Note.</span></button>
+      <button type="button" class="start-opt" data-go="example"><b>Guarda un esempio prima di iniziare</b><span>Lo puoi vedere solo adesso: quando inizi a scrivere, gli esempi non saranno più disponibili.</span></button>
+    </div>
+  </div>
+</section>
+
+<div class="viewbar" id="viewbar" hidden>
+  <p><b>Stai guardando un esempio</b> con dati inventati. Guardalo bene: quando inizi il tuo CV non potrai più riaprirlo.</p>
+  <div class="viewbar-actions">
+    <div class="seg" role="group" aria-label="Esempio">
+      <button type="button" data-ex="grafica" aria-pressed="true">Grafica</button>
+      <button type="button" data-ex="meccanica" aria-pressed="false">Meccanica</button>
+    </div>
+    <button type="button" class="btn primary" id="btn-start-mine">Ho capito, inizia il mio CV</button>
   </div>
 </div>
 
@@ -565,11 +609,14 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   /* ---------- stato ---------- */
   let cv;
   try { const raw = localStorage.getItem(STORE_KEY); if (raw) cv = JSON.parse(raw); } catch (e) {}
-  if (!cv || !cv.sections) cv = freshIds(clone(EXAMPLES.grafica));
+  // "edit" = si scrive il proprio CV · "start" = scelta iniziale · "example" = esempio da guardare (non si salva)
+  let mode = "edit";
+  if (!cv || !cv.sections) { cv = blankCV(); mode = "start"; }
   normalizeCv(cv);
 
   let saveTimer;
   const persist = () => {
+    if (mode !== "edit") return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(cv)); } catch (e) {} }, 300);
   };
@@ -944,17 +991,13 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
 
   $("#btn-new").addEventListener("click", () => openDialog(`
     <h3>Nuovo CV</h3>
-    <p>Da dove vuoi partire? Il CV attuale verrà sostituito: se ti serve, prima usa <b>Salva file</b>.</p>
-    <div class="foot" style="justify-content:flex-start">
-      <button class="btn primary" type="button" data-start="blank">CV vuoto</button>
-      <button class="btn" type="button" data-start="meccanica">Esempio meccanica</button>
-      <button class="btn" type="button" data-start="grafica">Esempio grafica</button>
-    </div>
-    <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button></div>`));
+    <p>Vuoi cancellare questo CV e ricominciare da un CV vuoto? Se ti serve, prima usa <b>Salva file</b> o <b>Copia per le Note</b>.</p>
+    <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" data-start="blank">Sì, CV vuoto</button></div>`));
   dlgBody.addEventListener("click", e => {
     const b = e.target.closest("[data-start]");
     if (!b) return;
-    cv = b.dataset.start === "blank" ? blankCV() : freshIds(clone(EXAMPLES[b.dataset.start]));
+    const field = cv.meta.field;
+    cv = blankCV(); cv.meta.field = field;
     dlg.close(); renderEditor(); window.scrollTo(0, 0);
   });
 
@@ -1132,11 +1175,10 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     });
     check.addEventListener("change", () => { clear.disabled = !check.checked; });
     clear.addEventListener("click", () => {
-      cv = blankCV();
+      clearTimeout(saveTimer);
       try { localStorage.removeItem(STORE_KEY); } catch (e) {}
       dlg.close();
-      renderEditor();
-      window.scrollTo(0, 0);
+      showStart();
       toast("Computer svuotato. Buon lavoro!");
     });
   });
@@ -1163,14 +1205,14 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
   const loadJSON = text => {
     if (!text.trim().startsWith("{")) {
       const data = textToCv(text);
-      if (data) { cv = data; dlg.open && dlg.close(); renderEditor(); toast("CV caricato dalla nota"); }
+      if (data) { cv = normalizeCv(data); dlg.open && dlg.close(); enterEdit(); toast("CV caricato dalla nota"); }
       else toast("Non riconosco questo testo: incolla tutta la nota copiata da CV Lab.");
       return;
     }
     try {
       const data = JSON.parse(text);
       if (!data || !Array.isArray(data.sections) || !data.header) throw new Error();
-      cv = normalizeCv(data); dlg.open && dlg.close(); renderEditor(); toast("CV caricato");
+      cv = normalizeCv(data); dlg.open && dlg.close(); enterEdit(); toast("CV caricato");
     } catch (e) { toast("Questo file non è un CV salvato con CV Lab."); }
   };
   $("#btn-open").addEventListener("click", () => openDialog(`
@@ -1420,7 +1462,50 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     return false;
   }
 
-  renderEditor();
+  /* ---------- avvio: CV nuovo, CV salvato o esempio da guardare una volta sola ---------- */
+  function setMode(m) {
+    mode = m;
+    document.body.dataset.mode = m;
+    $("#start").hidden = m !== "start";
+    $("#viewbar").hidden = m !== "example";
+  }
+  function enterEdit() {
+    setMode("edit");
+    bld = null;
+    document.body.dataset.view = "edit";
+    document.querySelectorAll(".tabs [data-view]").forEach(x => x.setAttribute("aria-pressed", x.dataset.view === "edit"));
+    renderEditor();
+    window.scrollTo(0, 0);
+  }
+  function showStart() { cv = blankCV(); setMode("start"); window.scrollTo(0, 0); }
+  function showExample(field) {
+    cv = freshIds(clone(EXAMPLES[field]));
+    cv.example = false;
+    setMode("example");
+    document.querySelectorAll("[data-ex]").forEach(x => x.setAttribute("aria-pressed", x.dataset.ex === field));
+    renderSheet();
+    window.scrollTo(0, 0);
+  }
+  $("#start").addEventListener("click", e => {
+    const b = e.target.closest("[data-go]");
+    if (!b) return;
+    if (b.dataset.go === "blank") { cv = blankCV(); enterEdit(); }
+    if (b.dataset.go === "open") $("#btn-open").click();
+    if (b.dataset.go === "example") showExample("grafica");
+  });
+  $("#viewbar").addEventListener("click", e => {
+    const x = e.target.closest("[data-ex]");
+    if (x) showExample(x.dataset.ex);
+  });
+  $("#btn-start-mine").addEventListener("click", () => {
+    const field = cv.meta.field;
+    cv = blankCV(); cv.meta.field = field;
+    enterEdit();
+    toast("Buon lavoro! Da qui in poi gli esempi non sono più disponibili.");
+  });
+
+  if (mode === "start") setMode("start");
+  else { setMode("edit"); renderEditor(); }
 })();
 </script>
 </body>
