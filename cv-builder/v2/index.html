@@ -467,7 +467,7 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     <button class="btn primary" id="btn-pdf" type="button">Scarica PDF</button>
     <button class="btn done" id="btn-done" type="button">Ho finito</button>
   </div>
-  <input type="file" id="file-in" accept=".json,application/json" hidden>
+  <input type="file" id="file-in" hidden>
 </div>
 
 <div class="tabs">
@@ -1274,7 +1274,11 @@ dialog .foot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wr
     const prev = document.title;
     document.title = fileName("pdf").replace(/\.pdf$/, "");
     openDialog(`<h3>Scarica il PDF</h3>
-      <p>Nella finestra di stampa scegli <b>Destinazione: Salva come PDF</b>, formato <b>A4</b>, margini <b>Nessuno</b>, e togli la spunta a <b>Intestazioni e piè di pagina</b>.</p>
+      ${/iPad|iPhone|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+        ? `<p><b>Su iPad / iPhone:</b> si apre la finestra Stampa. Tocca l'icona <b>Condividi</b> (il quadrato con la freccia) in alto e scegli <b>Salva su File</b>.</p>`
+        : /Android/.test(navigator.userAgent)
+        ? `<p><b>Su tablet Android:</b> nella finestra di stampa, in alto, scegli <b>Salva come PDF</b>, poi tocca l'icona <b>PDF</b> e salva in <b>Download</b>.</p>`
+        : `<p>Nella finestra di stampa scegli <b>Destinazione: Salva come PDF</b>, formato <b>A4</b>, margini <b>Nessuno</b>, e togli la spunta a <b>Intestazioni e piè di pagina</b>.</p>`}
       <div class="foot"><button class="btn ghost" type="button" data-close>Annulla</button><button class="btn primary" type="button" id="do-print">Apri la stampa</button></div>`);
     $("#do-print").addEventListener("click", () => { dlg.close(); setTimeout(() => { window.print(); document.title = prev; }, 50); });
   });
