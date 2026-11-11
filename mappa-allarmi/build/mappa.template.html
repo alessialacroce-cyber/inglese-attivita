@@ -1,0 +1,316 @@
+<title>Mappa allarmi novembre 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sala operativa — mappa a sinistra, registro episodi a destra; filtri in testa. */
+:root {
+  --bg: #eef1f4; --panel: #ffffff; --fg: #121820; --muted: #5a6573; --line: #d5dbe2;
+  --sea: #dfe7ef; --land: #fbfcfd; --border: #b8c2cd; --focus: #3b5bdb;
+  --c-aereo: #2563c9; --c-scuola: #c27a00; --c-supermercato: #148a68; --c-ospedale: #cc2f45;
+  --chip-off: #e6eaef;
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1419; --panel: #161d24; --fg: #e6ebf0; --muted: #94a0ad; --line: #27313b;
+  --sea: #111a22; --land: #1f2831; --border: #3a4652; --focus: #8ea6ff;
+  --c-aereo: #6aa0ff; --c-scuola: #f0ad3c; --c-supermercato: #3fc99d; --c-ospedale: #ff6b7f;
+  --chip-off: #1f2831; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f1419; --panel: #161d24; --fg: #e6ebf0; --muted: #94a0ad; --line: #27313b;
+  --sea: #111a22; --land: #1f2831; --border: #3a4652; --focus: #8ea6ff;
+  --c-aereo: #6aa0ff; --c-scuola: #f0ad3c; --c-supermercato: #3fc99d; --c-ospedale: #ff6b7f;
+  --chip-off: #1f2831; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px 28px; }
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 14px; }
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px 24px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 4px 0 0; max-width: 70ch; }
+.stamp { font-family: var(--f-mono); font-size: 12px; color: var(--muted); text-align: right; }
+.stamp b { color: var(--fg); font-weight: 500; }
+
+.filters { display: grid; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); min-width: 64px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cat { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 5px 12px 5px 8px; }
+.cat[aria-pressed="false"] { background: var(--chip-off); color: var(--muted); }
+.cat[aria-pressed="false"] svg { opacity: 0.35; }
+.cat .n { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.day { font-family: var(--f-mono); font-size: 12px; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+.day[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.day:disabled { opacity: 0.35; cursor: default; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; align-items: start; }
+.mapbox { position: relative; background: var(--sea); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-width: 0; }
+#map { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 860; max-height: 78vh; touch-action: none; cursor: grab; }
+#map:active { cursor: grabbing; }
+.land path { fill: var(--land); stroke: var(--border); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.mk { cursor: pointer; }
+.mk .shape { stroke: var(--panel); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.mk.approx .shape { stroke-dasharray: 3 2; stroke: var(--fg); stroke-width: 1; fill-opacity: 0.55; }
+.mk.sel .halo { display: block; }
+.mk .halo { display: none; fill: none; stroke: var(--fg); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.mk:focus { outline: none; }
+.mk:focus-visible .halo { display: block; stroke: var(--focus); }
+.zoom { position: absolute; right: 10px; top: 10px; display: grid; gap: 4px; }
+.zoom button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); font-size: 18px; line-height: 1; }
+.zoom button.txt { font-size: 11px; font-family: var(--f-mono); }
+.legend { position: absolute; left: 10px; bottom: 10px; background: color-mix(in srgb, var(--panel) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 11.5px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; max-width: calc(100% - 20px); }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 12px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -130%); }
+
+aside { display: grid; gap: 10px; min-width: 0; }
+.detail { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.detail h2 { font-family: var(--f-display); font-weight: 700; font-size: 17px; margin: 6px 0 6px; text-wrap: balance; }
+.detail p { margin: 0 0 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; border-radius: 999px; padding: 2px 9px; border: 1px solid var(--line); color: var(--fg); }
+.pill.cat-pill { color: #fff; border-color: transparent; }
+.src { font-size: 12.5px; display: grid; gap: 4px; padding: 0; margin: 0; list-style: none; }
+.src a { color: var(--fg); text-decoration-color: var(--border); text-underline-offset: 3px; }
+.src a:hover { text-decoration-color: var(--fg); }
+.empty { color: var(--muted); }
+.list { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; max-height: 52vh; overflow: auto; }
+.list h3 { position: sticky; top: 0; margin: 0; background: var(--panel); padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--line); font-weight: 600; }
+.item { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: start; width: 100%; text-align: left; border: 0; background: none; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.item:hover { background: var(--chip-off); }
+.item[aria-current="true"] { background: var(--chip-off); box-shadow: inset 3px 0 0 var(--fg); }
+.item .t { font-weight: 500; }
+.item .l { font-size: 12px; color: var(--muted); }
+.item .d { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+.item svg { margin-top: 3px; }
+.note { font-size: 12px; color: var(--muted); max-width: 100ch; }
+.note b { color: var(--fg); font-weight: 600; }
+
+@media (max-width: 920px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .list { max-height: none; }
+  .stamp { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Allarmi bomba e attacchi in Europa</h1>
+      <p class="sub">Aerei, scuole, supermercati e ospedali: gli episodi riportati da fonti giornalistiche e istituzionali tra il 2 e l'11 novembre 2026. Tocca un simbolo per i dettagli e le fonti.</p>
+    </div>
+    <div class="stamp">Aggiornato al <b>11/11/2026</b><br><span id="count"></span></div>
+  </header>
+
+  <div class="filters">
+    <div class="row" id="cats"><span class="lbl">Tipo</span></div>
+    <div class="row" id="days"><span class="lbl">Giorno</span></div>
+  </div>
+
+  <div class="main">
+    <div class="mapbox">
+      <svg id="map" viewBox="0 0 1000 860" role="img" aria-label="Mappa dell'Europa con gli episodi">
+        <g id="vp"><g class="land" id="land"></g><g id="marks"></g></g>
+      </svg>
+      <div class="zoom">
+        <button id="zin" aria-label="Ingrandisci">+</button>
+        <button id="zout" aria-label="Riduci">−</button>
+        <button id="zit" class="txt" aria-label="Zoom sull'Italia">IT</button>
+        <button id="zeu" class="txt" aria-label="Vista Europa">EU</button>
+      </div>
+      <div class="legend">
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--muted)"/></svg>luogo indicato dalla fonte</span>
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--muted)" fill-opacity=".55" stroke="var(--fg)" stroke-dasharray="3 2"/></svg>posizione indicativa</span>
+      </div>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+
+    <aside>
+      <div class="detail" id="detail" aria-live="polite"></div>
+      <div class="list"><h3 id="listh">Registro episodi</h3><div id="list"></div></div>
+    </aside>
+  </div>
+
+  <p class="note"><b>Come leggere la mappa.</b> Ogni simbolo è un episodio documentato; per gli aerei è il luogo di atterraggio o del controllo. Le cifre complessive (fino a 6.300 scuole raggiunte dalle email, oltre 100 supermercati, circa 30–35 voli) non sono tutte geolocalizzabili e sono riassunte nel report. Tutti gli allarmi bomba verificati finora si sono rivelati falsi. Gli attacchi ai supermercati sono informatici, contro i sistemi di refrigerazione.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+/*__DATA__*/
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const cats = Object.keys(CATEGORIE);
+  const state = { on: new Set(cats), day: null, sel: null };
+  const fmt = (iso) => { const d = new Date(iso + "T12:00:00"); return d.toLocaleDateString("it-IT", { day: "numeric", month: "short" }); };
+  const label = (e) => e.data_label || fmt(e.data);
+  const color = (c) => `var(--c-${c})`;
+
+  function shapeEl(cat, r) {
+    let el;
+    if (cat === "aereo") { el = document.createElementNS(NS, "path"); el.setAttribute("d", `M0,${-r * 1.2} L${r * 1.1},${r * 0.8} L${-r * 1.1},${r * 0.8} Z`); }
+    else if (cat === "scuola") { el = document.createElementNS(NS, "rect"); el.setAttribute("x", -r * 0.9); el.setAttribute("y", -r * 0.9); el.setAttribute("width", r * 1.8); el.setAttribute("height", r * 1.8); }
+    else if (cat === "supermercato") { el = document.createElementNS(NS, "path"); el.setAttribute("d", `M0,${-r * 1.25} L${r * 1.25},0 L0,${r * 1.25} L${-r * 1.25},0 Z`); }
+    else { el = document.createElementNS(NS, "circle"); el.setAttribute("r", r); }
+    el.setAttribute("fill", color(cat));
+    return el;
+  }
+  function icon(cat, size) {
+    const s = document.createElementNS(NS, "svg"); s.setAttribute("width", size); s.setAttribute("height", size);
+    s.setAttribute("viewBox", "-8 -8 16 16"); s.setAttribute("aria-hidden", "true"); s.appendChild(shapeEl(cat, 5.5)); return s;
+  }
+
+  // Base map
+  const land = document.getElementById("land");
+  for (const p of BASE.paesi) { const el = document.createElementNS(NS, "path"); el.setAttribute("d", p.d); land.appendChild(el); }
+
+  // Spread markers that share a spot
+  const groups = {};
+  for (const e of EVENTI) { const [x, y] = BASE.pos[e.id]; const k = Math.round(x / 6) + ":" + Math.round(y / 6); (groups[k] = groups[k] || []).push(e); }
+  const off = {};
+  for (const g of Object.values(groups)) {
+    g.forEach((e, i) => { if (g.length === 1) { off[e.id] = [0, 0]; return; } const a = (i / g.length) * Math.PI * 2 - Math.PI / 2; off[e.id] = [Math.cos(a) * 7, Math.sin(a) * 7]; });
+  }
+
+  const marks = document.getElementById("marks");
+  const mkEls = {};
+  for (const e of EVENTI) {
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("class", "mk" + (e.approx ? " approx" : ""));
+    g.setAttribute("tabindex", "0"); g.setAttribute("role", "button");
+    g.setAttribute("aria-label", `${CATEGORIE[e.cat].breve}: ${e.titolo}, ${e.luogo}, ${label(e)}`);
+    const inner = document.createElementNS(NS, "g"); inner.setAttribute("class", "inner");
+    const halo = document.createElementNS(NS, "circle"); halo.setAttribute("class", "halo"); halo.setAttribute("r", 11);
+    const sh = shapeEl(e.cat, 6); sh.setAttribute("class", "shape");
+    inner.append(halo, sh); g.appendChild(inner);
+    g.addEventListener("click", (ev) => { ev.stopPropagation(); select(e.id, false); });
+    g.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(e.id, false); } });
+    g.addEventListener("pointerenter", () => showTip(e));
+    g.addEventListener("pointerleave", hideTip);
+    marks.appendChild(g); mkEls[e.id] = g;
+  }
+
+  // Zoom
+  const svg = d3.select("#map"), vp = d3.select("#vp");
+  let k = 1;
+  const zoom = d3.zoom().scaleExtent([1, 14]).translateExtent([[-100, -100], [1100, 960]]).on("zoom", (ev) => {
+    vp.attr("transform", ev.transform); k = ev.transform.k; place(); hideTip();
+  });
+  svg.call(zoom).on("dblclick.zoom", null);
+  function place() {
+    const s = 1 / Math.pow(k, 0.85);
+    for (const e of EVENTI) {
+      const [x, y] = BASE.pos[e.id], [ox, oy] = off[e.id];
+      mkEls[e.id].setAttribute("transform", `translate(${x + ox / k * Math.min(k, 3)},${y + oy / k * Math.min(k, 3)})`);
+      mkEls[e.id].firstChild.setAttribute("transform", `scale(${s})`);
+    }
+  }
+  const fly = (x0, y0, x1, y1) => {
+    const kk = Math.min(14, 0.92 / Math.max((x1 - x0) / 1000, (y1 - y0) / 860));
+    svg.transition().duration(matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 600)
+      .call(zoom.transform, d3.zoomIdentity.translate(500, 430).scale(kk).translate(-(x0 + x1) / 2, -(y0 + y1) / 2));
+  };
+  document.getElementById("zin").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1.6);
+  document.getElementById("zout").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1 / 1.6);
+  document.getElementById("zeu").onclick = () => svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+  document.getElementById("zit").onclick = () => fly(370, 570, 540, 800);
+  place();
+
+  // Tooltip
+  const tip = document.getElementById("tip"), box = document.querySelector(".mapbox");
+  function showTip(e) {
+    const r = mkEls[e.id].getBoundingClientRect(), b = box.getBoundingClientRect();
+    tip.textContent = `${e.luogo} · ${label(e)}`;
+    tip.style.left = (r.left + r.width / 2 - b.left) + "px"; tip.style.top = (r.top - b.top) + "px"; tip.hidden = false;
+  }
+  function hideTip() { tip.hidden = true; }
+
+  // Filters
+  const catRow = document.getElementById("cats");
+  const catBtns = {};
+  for (const c of cats) {
+    const b = document.createElement("button"); b.className = "cat"; b.setAttribute("aria-pressed", "true");
+    b.append(icon(c, 14), document.createTextNode(CATEGORIE[c].nome));
+    const n = document.createElement("span"); n.className = "n"; b.appendChild(n);
+    b.onclick = () => { state.on.has(c) ? state.on.delete(c) : state.on.add(c); render(); };
+    catRow.appendChild(b); catBtns[c] = { b, n };
+  }
+  const dayRow = document.getElementById("days");
+  const all = document.createElement("button"); all.className = "day"; all.textContent = "Tutti";
+  all.onclick = () => { state.day = null; render(); }; dayRow.appendChild(all);
+  const dayBtns = {};
+  for (let d = 2; d <= 11; d++) {
+    const iso = `2026-11-${String(d).padStart(2, "0")}`;
+    const b = document.createElement("button"); b.className = "day"; b.textContent = fmt(iso);
+    b.disabled = !EVENTI.some((e) => e.data === iso);
+    b.onclick = () => { state.day = state.day === iso ? null : iso; render(); };
+    dayRow.appendChild(b); dayBtns[iso] = b;
+  }
+
+  const visible = (e) => state.on.has(e.cat) && (!state.day || e.data === state.day);
+  const list = document.getElementById("list");
+  const itemEls = {};
+  const sorted = [...EVENTI].sort((a, b) => a.data.localeCompare(b.data) || cats.indexOf(a.cat) - cats.indexOf(b.cat));
+  for (const e of sorted) {
+    const b = document.createElement("button"); b.className = "item";
+    const mid = document.createElement("span");
+    mid.innerHTML = `<div class="t"></div><div class="l"></div>`;
+    mid.querySelector(".t").textContent = e.titolo; mid.querySelector(".l").textContent = e.luogo + " · " + e.paese;
+    const d = document.createElement("span"); d.className = "d"; d.textContent = label(e);
+    b.append(icon(e.cat, 14), mid, d);
+    b.onclick = () => select(e.id, true);
+    list.appendChild(b); itemEls[e.id] = b;
+  }
+
+  function render() {
+    let n = 0;
+    for (const c of cats) {
+      catBtns[c].b.setAttribute("aria-pressed", state.on.has(c));
+      catBtns[c].n.textContent = EVENTI.filter((e) => e.cat === c && (!state.day || e.data === state.day)).length;
+    }
+    all.setAttribute("aria-pressed", state.day === null);
+    for (const [iso, b] of Object.entries(dayBtns)) b.setAttribute("aria-pressed", state.day === iso);
+    for (const e of EVENTI) { const v = visible(e); mkEls[e.id].style.display = v ? "" : "none"; itemEls[e.id].hidden = !v; if (v) n++; }
+    document.getElementById("count").textContent = `${n} episodi mostrati su ${EVENTI.length}`;
+    document.getElementById("listh").textContent = `Registro episodi · ${n}`;
+    if (state.sel && !visible(EVENTI.find((e) => e.id === state.sel))) select(null);
+  }
+
+  const detail = document.getElementById("detail");
+  function select(id, focusMap) {
+    state.sel = id;
+    for (const [k2, el] of Object.entries(mkEls)) el.classList.toggle("sel", k2 === id);
+    for (const [k2, el] of Object.entries(itemEls)) el.setAttribute("aria-current", k2 === id);
+    const e = EVENTI.find((x) => x.id === id);
+    if (!e) {
+      detail.innerHTML = `<div class="meta"><span class="pill">Nessun episodio selezionato</span></div><h2>Seleziona un simbolo sulla mappa</h2><p class="empty">Triangolo = aereo, quadrato = scuola, rombo = supermercato, cerchio = ospedale. Usa i filtri per tipo e giorno, oppure il registro qui sotto.</p>`;
+      return;
+    }
+    detail.innerHTML = `<div class="meta"></div><h2></h2><p class="where"></p><p class="txt"></p><ul class="src"></ul>`;
+    const meta = detail.querySelector(".meta");
+    const cp = document.createElement("span"); cp.className = "pill cat-pill"; cp.style.background = color(e.cat); cp.textContent = CATEGORIE[e.cat].breve;
+    const ep = document.createElement("span"); ep.className = "pill"; ep.textContent = ESITI[e.esito];
+    const dt = document.createElement("span"); dt.textContent = label(e) + " 2026";
+    meta.append(cp, ep, dt);
+    if (e.approx) { const ap = document.createElement("span"); ap.className = "pill"; ap.textContent = "posizione indicativa"; meta.appendChild(ap); }
+    detail.querySelector("h2").textContent = e.titolo;
+    const w = detail.querySelector(".where"); w.className = "meta"; w.textContent = e.luogo + " · " + e.paese;
+    detail.querySelector(".txt").textContent = e.dettaglio;
+    const ul = detail.querySelector(".src");
+    for (const f of e.fonti) { const li = document.createElement("li"); const a = document.createElement("a"); a.href = f.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "↗ " + f.nome; li.appendChild(a); ul.appendChild(li); }
+    if (focusMap) {
+      const [x, y] = BASE.pos[e.id];
+      const kk = Math.max(k, 3.5);
+      svg.transition().duration(matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500).call(zoom.transform, d3.zoomIdentity.translate(500, 430).scale(kk).translate(-x, -y));
+    } else {
+      itemEls[e.id].scrollIntoView({ block: "nearest" });
+    }
+  }
+  svg.on("click", () => select(null));
+
+  render(); select(null);
+})();
+</script>
